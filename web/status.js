@@ -5,6 +5,7 @@ export const phases = [
   {state: 'done', key: 'ph.lb.calc', note: true},
   {state: 'done', key: 'ph.lb.nec', note: true},
   {state: 'wip', key: 'ph.lb.web', note: true},
+  {state: 'done', key: 'ph.lb.classic', note: true},
   {state: 'done', key: 'ph.wasm', note: true},
   {state: 'todo', key: 'ph.lb.tune'},
   {state: 'todo', key: 'ph.lb.cad'},

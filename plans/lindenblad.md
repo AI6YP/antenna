@@ -16,10 +16,11 @@ Bands, sat tables, install, match box: same as [qfh.md](./qfh.md) (QFH work kept
 
 1. **Parasitic Lindenblad (AA2TX) — MVP, 2m + 70cm**
    central vertical driven dipole + N parasitic tilted elements (N = 3, 4, 5; classic 4)
-2. Classic: 4 × λ/2 folded dipoles, 4 × λ/2 300 Ω twin-lead (China, VF measure) → hub → match
+2. **Classic: 4 × λ/2 folded dipoles, 4 × λ/2 300 Ω twin-lead (China, VF measure) → hub → match** — implemented
+   (`"variant": "classic"`, lib/lindenblad-classic.js, see phase 8)
 3. EZ-Lindenblad (AA2TX): 4 × tube dipoles, 4 × 0.374 λ 75 Ω coax (SWR 2.7 trick → 200 Ω ‖ 4 = 50 Ω)
 
-Options 2, 3: post-MVP, same tool (variant param).
+Options 2, 3: post-MVP, same tool (variant param). Option 2 done (web: "Classic Lindenblad" selector, `?a=lindenblad-classic`).
 
 ## Reference: AA2TX Parasitic 70cm (AMSAT Proc. 2006, `ref/70ParaLindy.pdf`)
 
@@ -209,6 +210,37 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
 6. 3D parts: Replicad models (hub, adjustable parasitic adapter, mast adapters, spacers) → STL/STEP
 7. Post-MVP: optimizer (lengths, radius, tilt, N → AR < 3 dB 5–45°, max RHCP 5–30°, SWR)
 8. Post-MVP: classic (300 Ω twin-lead) + EZ variants; W6SHP tables as fixtures
+   - [x] classic: `lindenblad` type, `"variant": "classic"` (lindenblad.calc / normalize / lindenbladNec.deck
+         dispatch; lib/lindenblad-common.js = shared localDir / axisDist); examples/lindenblad-classic-{70cm,2m}.json
+   - [x] lib/lindenblad-classic.js: input `element {n, length, od, od2 (null = od), spacing (c-c), radius, tilt,
+         lean, z, phase, fold: plane | radial}`, `line {z0 300, vf 0.82, length null = λ/2}`,
+         `match {type none | qwt, z0, vf, length null = λ/4}`, `feed.strayC` (pF per dipole);
+         dims: cut length (one rod, bend R = s/2), step-up k, 2r/λ, neighbor clearance (segment distance),
+         line electrical deg / straight path / slack, qwt length; validation
+   - [x] tilt sense: classic RHCP = looking toward hub, right end up (s = +1, opposite of parasitic) — NEC verified
+   - [x] lib/lindenblad-classic-nec.js: folded dipole = 4 wires (fed with source at center, end, other with same
+         segment count, end; short end wires 1 segment), N sources in phase; mast as parasitic variant
+         (antenna bottom = lowest element point at metal + pvc). Lines / hub / match post-processed:
+         deck.zPost(inputs, f) (sim.summarize hook) → per-dipole Z ‖ strayC → lossless line → N in parallel → qwt.
+         Equal NEC sources exact by N-fold symmetry (equal Z → equal line voltages). lib/tline.js (zin, parallel)
+   - [x] results 70cm W6SHP defaults (1/4" rod, s 20, L 267, r 103 = 0.15 λ, tilt 30, free space):
+     - dipole Z 266.7 + j2.1 Ω (W6SHP/WD4ECK MININEC: 264) → hub 66.7 Ω, SWR 1.33, band max 1.35
+     - RHCP 1.5 dBic @ 0°, 0.8 @ 10°, 0.3 @ 30°, AR ≤ 0.8 dB 0–30°, ripple ≤ 0.07 dB, RHCP − LHCP ≈ 29 dB @ 10°,
+       zenith null; (parasitic AA2TX: +2.4 dBic @ 0°)
+     - qwt 58 Ω → SWR 1.01 (band max 1.05); length sweep 255..285: X −17..+25 Ω, 265 ≈ resonant
+     - Stu (WD4ECK) 200 Ω idea: od 6.35 / od2 1.63 (#14), s 13: L 280 → 61 − j8.5 Ω, gain +3.3 dBic @ 0°
+       (longer dipoles, more horizon gain) → candidate for optimizer
+     - poor ground 1.5 m: AR 3.6 dB @ 10–20°, 10 dB @ 30° (ground reflection, same as parasitic)
+   - [x] 2m (W6SHP Table 1, 1/4" s 50 → 841 mm, r 308, pvc 1000): dipole 285 − j11 Ω (W6SHP 284.8), SWR 1.43,
+         AR ≤ 1.2 dB 0–30°; s 40 → NEC "segment too small" warnings (end wire < 0.02 λ) → 50 mm
+   - [x] web: web/antennas/lindenblad-classic.js (presets, sliders incl. nullable od2 / line length, dims table,
+         3D: folded dipoles, feed, PVC arms + printed mounts, twin-lead along arms, hub, PVC section + coax, mast);
+         main.js: adapter.autoValue, field.autoKey, decimals from step; i18n EN/RU; status phase; precomputed data
+   - [x] tests: test/lindenblad-classic.js (geometry, fold, tilt sense, clearances, network, tline, validation),
+         test/lindenblad-classic-nec.js (deck topology, RHCP/LHCP > 15 dB, AR < 3, zenith null, W6SHP Z, qwt)
+   - [ ] not modeled: twin-lead radiation / proximity (W6SHP: routing changes SWR), line loss, balun at hub
+         (common mode on coax), feed stray C default 0 → VNA
+   - [ ] EZ variant
 9. Build pages EN/RU, VNA measure, feed back
 
 ## Open questions
@@ -216,7 +248,8 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
 - sleeve: shield bonded at top only (decided); ferrite added later only if VNA shows common mode
 - PVC section length — NEC sweep
 - N = 3 / 5 parasitic: azimuth ripple + Z vs N = 4 — NEC
-- 300 Ω twin-lead VF (China) — measure before classic variant
+- 300 Ω twin-lead VF (China) — measure (classic: line.vf param, default 0.82; Z0 param)
+- classic: balun at hub (W6SHP: λ/4 coax balun, SWR 1.5 → 1.35) — model coax common mode?
 - RHCP vs LHCP: model both; adjustable adapter allows flipping tilt on built antenna
 
 ## References

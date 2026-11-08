@@ -24,6 +24,30 @@
     "file": "lindenblad-70cm-poor.json"
   },
   {
+    "name": "lindenblad-classic-2m",
+    "type": "lindenblad",
+    "ground": "free",
+    "file": "lindenblad-classic-2m-free.json"
+  },
+  {
+    "name": "lindenblad-classic-2m",
+    "type": "lindenblad",
+    "ground": "poor",
+    "file": "lindenblad-classic-2m-poor.json"
+  },
+  {
+    "name": "lindenblad-classic-70cm",
+    "type": "lindenblad",
+    "ground": "free",
+    "file": "lindenblad-classic-70cm-free.json"
+  },
+  {
+    "name": "lindenblad-classic-70cm",
+    "type": "lindenblad",
+    "ground": "poor",
+    "file": "lindenblad-classic-70cm-poor.json"
+  },
+  {
     "name": "qfh-2m",
     "type": "qfh",
     "ground": "free",

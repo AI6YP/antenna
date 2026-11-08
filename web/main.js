@@ -6,9 +6,10 @@ import * as sats from './sats.js';
 import * as toolbar from './toolbar.js';
 import {t, apply as applyI18n, onLang} from './i18n.js';
 import lindenblad from './antennas/lindenblad.js';
+import lindenbladClassic from './antennas/lindenblad-classic.js';
 import qfh from './antennas/qfh.js';
 
-const adapters = {lindenblad, qfh}; // first = default
+const adapters = {lindenblad, [lindenbladClassic.type]: lindenbladClassic, qfh}; // first = default
 
 // ---- URL query <-> state (shareable links) ------------------------------------
 // ?a=<antenna>&band=<band>&<field path>=<value>...&g=<ground>&pk=<kind>&pr=<range>
@@ -73,10 +74,11 @@ selEl.addEventListener('click', e => {
 // ---- form (generated from adapter fields) -----------------------------------
 const form = document.getElementById('inputs');
 let lastRes = null;
-const fmtV = (f, v) => (typeof v === 'number' ? (f.step < 1 ? v.toFixed(1) : String(Math.round(v * 100) / 100)) : String(v));
+const decimals = step => (step < 1 ? Math.max(1, Math.ceil(-Math.log10(step) - 1e-9)) : 0);
+const fmtV = (f, v) => (typeof v === 'number' ? (f.step < 1 ? v.toFixed(decimals(f.step)) : String(Math.round(v * 100) / 100)) : String(v));
 
-// effective value for nullable (auto) fields: from calc dims
-const autoValue = key => (key === 'driven.sleeve' && lastRes ? lastRes.dims.driven.bottom : undefined);
+// effective value for nullable (auto) fields: from calc dims (adapter.autoValue(key, res))
+const autoValue = key => (lastRes && A.autoValue ? A.autoValue(key, lastRes) : undefined);
 
 const control = f => {
   const v = A.get(state, f.key);
@@ -92,7 +94,7 @@ const control = f => {
   const dis = isAuto ? ' disabled' : '';
   return '<span class="range"><input' + name + ' type="range" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + val + '"' + dis + '>' +
     '<input' + name + ' type="number" step="' + f.step + '" value="' + fmtV(f, val ?? 0) + '"' + dis + '></span>' +
-    (f.nullable ? '<label class="auto"><input type="checkbox" data-auto="' + f.key + '"' + (isAuto ? ' checked' : '') + '> ' + t('f.auto') + '</label>' : '');
+    (f.nullable ? '<label class="auto"><input type="checkbox" data-auto="' + f.key + '"' + (isAuto ? ' checked' : '') + '> ' + t(f.autoKey || 'f.auto') + '</label>' : '');
 };
 
 const renderForm = () => {
@@ -104,7 +106,9 @@ form.addEventListener('input', e => {
   const el = e.target;
   if (el.dataset.auto) {
     const key = el.dataset.auto;
-    state = A.set(state, key, el.checked ? null : Math.round(autoValue(key)));
+    const f = A.fields(state).find(x => x.key === key);
+    const k = 10 ** decimals(f ? f.step : 1);
+    state = A.set(state, key, el.checked ? null : Math.round(autoValue(key) * k) / k);
     recalc();
     renderForm();
     return;
@@ -135,7 +139,7 @@ const recalc = () => {
     // refresh auto (nullable) displays
     form.querySelectorAll('input[data-auto]:checked').forEach(cb => {
       const v = autoValue(cb.dataset.auto);
-      form.querySelectorAll('[data-key="' + cb.dataset.auto + '"]').forEach(o => { o.value = v.toFixed(1); });
+      form.querySelectorAll('[data-key="' + cb.dataset.auto + '"]').forEach(o => { o.value = v === undefined ? '' : v.toFixed(1); });
     });
     scheduleSim();
   } catch (err) {

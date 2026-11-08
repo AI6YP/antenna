@@ -9,6 +9,9 @@ Plans: [plans/lindenblad.md](plans/lindenblad.md), [plans/qfh.md](plans/qfh.md)
 npm install
 npm test
 ./bin/antenna.js --list
+./bin/antenna.js examples/lindenblad-70cm.json [--nec | --sim]          # parasitic (AA2TX)
+./bin/antenna.js examples/lindenblad-classic-70cm.json [--nec | --sim]  # classic (folded dipoles + twin-lead)
+./bin/antenna.js examples/lindenblad-classic-70cm.json --sweep element.length=255:285:5
 ./bin/antenna.js examples/qfh-70cm.json --type qfh [--nec | --sim]
 ./bin/qfh.js examples/qfh-70cm.json     # legacy alias
 nec2++ -iexamples/example1.nec

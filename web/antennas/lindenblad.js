@@ -115,6 +115,9 @@ const build3d = (res, h) => {
   return {group, frame: {zTop: g.zTop, zBot: g.zBottom, key: 'lb/' + p.freq}};
 };
 
+// effective value of nullable (auto) field
+const autoValue = (key, res) => (key === 'driven.sleeve' ? res.dims.driven.bottom : undefined);
+
 const designText = (i, t) => t('s.lb.design', {
   freq: i.freq, n: i.parasitic.n, top: i.driven.top,
   sleeve: i.driven.sleeve === null ? 'auto' : i.driven.sleeve,
@@ -124,7 +127,7 @@ const designText = (i, t) => t('s.lb.design', {
 export default {
   type: 'lindenblad', legacy: false, defaultBand: '70cm', presets,
   nec: lib.lindenbladNec,
-  calc: lindenblad.calc, init, fields, get, set, toInput, renderDims, build3d, designText,
+  calc: lindenblad.calc, init, fields, get, set, toInput, renderDims, build3d, designText, autoValue,
   legendKey: 'v.lb.legend', liveKey: 's.lb.live',
   necOpts: {}
 };

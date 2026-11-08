@@ -112,6 +112,6 @@ describe('lindenblad', () => {
     expect(() => lindenblad.calc({parasitic: {radius: 5}})).to.throw(/clear/);
     expect(() => lindenblad.calc({driven: {sleeve: -1}})).to.throw(/sleeve/);
     expect(() => lindenblad.calc({driven: {top: 0}})).to.throw(/top/);
-    expect(() => lindenblad.calc({variant: 'classic'})).to.throw(/not implemented/);
+    expect(() => lindenblad.calc({variant: 'ez'})).to.throw(/not implemented/);
   });
 });
