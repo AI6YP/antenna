@@ -196,6 +196,9 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
    - [x] web/pattern3d.js: 3D radiation pattern (radius + color = gain over 20/30/40 dB, RHCP/LHCP/total,
          horizon / 30° / 60° rings); precomputed data incl. sphere (scripts/build-data.js)
    - [x] i18n EN/RU, status list = Lindenblad phases; verified headless Chromium (live 0.5 s free, 3 s ground)
+   - [x] fixed right parameter panel (selector, form, ground, sim status, theme / language)
+   - [x] shareable URL: ?a=&band=&<field path>=<v>&g=&pk=&pr= (only diffs vs band preset, auto = null,
+         invalid values ignored), updated on every change; "Copy link" + "reset" in panel
    - [ ] cut list / BOM, Replicad part preview
 6. 3D parts: Replicad models (hub, adjustable parasitic adapter, mast adapters, spacers) → STL/STEP
 7. Post-MVP: optimizer (lengths, radius, tilt, N → AR < 3 dB 5–45°, max RHCP 5–30°, SWR)

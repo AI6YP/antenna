@@ -10,9 +10,46 @@ import qfh from './antennas/qfh.js';
 
 const adapters = {lindenblad, qfh}; // first = default
 
-const url = new URL(location.href);
-let A = adapters[url.searchParams.get('a')] || lindenblad;
-let state = A.init(A.defaultBand);
+// ---- URL query <-> state (shareable links) ------------------------------------
+// ?a=<antenna>&band=<band>&<field path>=<value>...&g=<ground>&pk=<kind>&pr=<range>
+// only values that differ from the band preset are written; 'auto' = null (e.g. driven.sleeve)
+const fieldKeys = (ad, st) => ad.fields(st).map(f => f.key).filter(k => k !== 'band');
+const enc = v => (v === null ? 'auto' : String(v));
+
+const stateFromQuery = (ad, q) => {
+  const band = ad.presets[q.get('band')] ? q.get('band') : ad.defaultBand;
+  let st = ad.init(band);
+  for (const key of fieldKeys(ad, st)) {
+    if (!q.has(key)) { continue; }
+    const v = q.get(key);
+    const next = ad.set(st, key, v === 'auto' ? null : v);
+    try { ad.calc(ad.toInput(next)); st = next; } catch { /* ignore invalid value */ }
+  }
+  return st;
+};
+
+const query0 = new URL(location.href).searchParams;
+let A = adapters[query0.get('a')] || lindenblad;
+let state = stateFromQuery(A, query0);
+
+const writeQuery = () => {
+  const u = new URL(location.href);
+  const q = u.searchParams;
+  // drop all antenna keys, keep foreign ones (lang, ...)
+  for (const ad of Object.values(adapters)) { fieldKeys(ad, ad.init(ad.defaultBand)).forEach(k => q.delete(k)); }
+  ['a', 'band', 'g', 'pk', 'pr'].forEach(k => q.delete(k));
+  q.set('a', A.type);
+  q.set('band', state.band);
+  const base = A.init(state.band);
+  for (const key of fieldKeys(A, state)) {
+    const v = A.get(state, key), v0 = A.get(base, key);
+    if (enc(v) !== enc(v0)) { q.set(key, enc(v)); }
+  }
+  if (sim.ground !== 'free') { q.set('g', sim.ground); }
+  if (sim.kind !== 'rhcp') { q.set('pk', sim.kind); }
+  if (sim.range !== 30) { q.set('pr', String(sim.range)); }
+  history.replaceState(null, '', u);
+};
 
 // ---- antenna selector -------------------------------------------------------
 const selEl = document.getElementById('antenna-select');
@@ -26,9 +63,6 @@ selEl.addEventListener('click', e => {
   if (!b || adapters[b.dataset.a] === A) { return; }
   A = adapters[b.dataset.a];
   state = A.init(A.defaultBand);
-  const u = new URL(location.href);
-  u.searchParams.set('a', A.type);
-  history.replaceState(null, '', u);
   liveOk = true;
   lastRes = null;
   lastSim = null;
@@ -97,6 +131,7 @@ const recalc = () => {
     lastRes = res;
     document.getElementById('dims').innerHTML = A.renderDims(res, t);
     view.update(res, A.build3d);
+    writeQuery();
     // refresh auto (nullable) displays
     form.querySelectorAll('input[data-auto]:checked').forEach(cb => {
       const v = autoValue(cb.dataset.auto);
@@ -109,14 +144,38 @@ const recalc = () => {
 };
 
 // ---- simulation -------------------------------------------------------------
-const sim = {ground: 'free', kind: 'rhcp', range: 30};
+const sim = {
+  ground: ['free', 'poor'].includes(query0.get('g')) ? query0.get('g') : 'free',
+  kind: patKinds.includes(query0.get('pk')) ? query0.get('pk') : 'rhcp',
+  range: patRanges.includes(+query0.get('pr')) ? +query0.get('pr') : 30
+};
 const simControls = document.getElementById('sim-controls');
 const renderSimControls = () => {
   simControls.innerHTML = ['free', 'poor'].map(g => '<label><input type="radio" name="ground" value="' + g + '"' +
     (sim.ground === g ? ' checked' : '') + '> ' + t('g.' + g) + '</label>').join('');
 };
+
+// share: copy current URL (all parameters in query)
+const shareEl = document.getElementById('share');
+const renderShare = () => {
+  shareEl.innerHTML = '<button type="button">🔗 ' + t('share.copy') + '</button> <a href="">' + t('share.reset') + '</a> <span class="note"></span>';
+  shareEl.querySelector('a').href = '?a=' + A.type + '&lang=' + document.documentElement.lang;
+};
+shareEl.addEventListener('click', async e => {
+  if (!e.target.closest('button')) { return; }
+  writeQuery();
+  const msg = shareEl.querySelector('.note');
+  try {
+    await navigator.clipboard.writeText(location.href);
+    msg.textContent = t('share.done');
+  } catch {
+    msg.textContent = location.href;
+  }
+  setTimeout(() => { msg.textContent = ''; }, 2500);
+});
 simControls.addEventListener('change', e => {
   sim.ground = e.target.value;
+  writeQuery();
   if (liveOk) { scheduleSim(); } else { loadSim(); }
 });
 
@@ -133,6 +192,7 @@ patControls.addEventListener('click', e => {
   if (!b) { return; }
   if (b.dataset.kind) { sim.kind = b.dataset.kind; }
   if (b.dataset.range) { sim.range = +b.dataset.range; }
+  writeQuery();
   renderPatControls();
   if (lastSim) { showPattern(lastSim.data); }
 });
@@ -232,6 +292,7 @@ const renderAll = () => {
   renderSelector();
   renderForm();
   renderSimControls();
+  renderShare();
   renderPatControls();
   if (lastRes) { document.getElementById('dims').innerHTML = A.renderDims(lastRes, t); }
   if (lastSim) { showSim(lastSim.data, lastSim.noteKey, lastSim.vars); }

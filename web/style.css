@@ -86,3 +86,6 @@ figcaption { font-size: 0.9em; color: var(--muted); }
 .seg button[aria-pressed="true"] { background: var(--small); color: #fff; }
 .seg button:hover:not([aria-pressed="true"]) { background: var(--line); }
 header { padding-top: 12px; }
+#share { margin-top: 8px; font-size: 0.9em; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#share button { font: inherit; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; }
+#share button:hover { background: var(--line); }

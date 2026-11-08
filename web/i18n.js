@@ -7,7 +7,7 @@ export const dict = {
     intro: 'Omni circularly polarized antennas for 2&nbsp;m and 70&nbsp;cm LEO satellites, RHCP, full-duplex V/u and U/v, &lt;&nbsp;50&nbsp;W. Parasitic Lindenblad (AA2TX style, default) with strong low-elevation gain; QFH kept as legacy. Calculator, 3D model, live NEC2 simulation and 3D radiation pattern.',
     source: 'source',
     'theme.light': 'Day', 'theme.dark': 'Night', 'theme.auto': 'Auto',
-    'h.params': 'Parameters', 'h.status': 'Status', 'h.calc': 'Calculator', 'h.sim': 'NEC2 simulation', 'h.sats': 'Satellites',
+    'h.params': 'Parameters', 'share.copy': 'Copy link', 'share.done': '✓ link with all parameters copied', 'share.reset': 'reset', 'h.status': 'Status', 'h.calc': 'Calculator', 'h.sim': 'NEC2 simulation', 'h.sats': 'Satellites',
 
     'a.lindenblad': 'Parasitic Lindenblad', 'a.qfh': 'QFH', 'a.legacy': 'legacy',
     'ph.lb.calc': 'Lindenblad calculator + geometry (AA2TX 70 cm reference)',
@@ -96,7 +96,7 @@ export const dict = {
     intro: 'Всенаправленные антенны круговой поляризации для низкоорбитальных спутников 2&nbsp;м и 70&nbsp;см, RHCP, полный дуплекс V/u и U/v, &lt;&nbsp;50&nbsp;Вт. Пассивный Линденблад (по AA2TX, по умолчанию) с высоким усилением на малых углах места; QFH оставлена как устаревшая. Калькулятор, 3D-модель, NEC2 в браузере и объёмная диаграмма направленности.',
     source: 'исходники',
     'theme.light': 'День', 'theme.dark': 'Ночь', 'theme.auto': 'Авто',
-    'h.params': 'Параметры', 'h.status': 'Состояние', 'h.calc': 'Калькулятор', 'h.sim': 'Моделирование NEC2', 'h.sats': 'Спутники',
+    'h.params': 'Параметры', 'share.copy': 'Копировать ссылку', 'share.done': '✓ ссылка со всеми параметрами скопирована', 'share.reset': 'сбросить', 'h.status': 'Состояние', 'h.calc': 'Калькулятор', 'h.sim': 'Моделирование NEC2', 'h.sats': 'Спутники',
 
     'a.lindenblad': 'Пассивный Линденблад', 'a.qfh': 'QFH', 'a.legacy': 'устар.',
     'ph.lb.calc': 'Калькулятор Линденблада + геометрия (опорная 70 см AA2TX)',
