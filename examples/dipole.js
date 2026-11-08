@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const nec2 = require('./nec-2');
+const nec2 = require('../lib/nec2.js');
 
 const lambda = f => (984 / f).toString().slice(0, 4);
 
