@@ -7,7 +7,7 @@ export const dict = {
     intro: 'Omni circularly polarized antennas for 2&nbsp;m and 70&nbsp;cm LEO satellites, RHCP, full-duplex V/u and U/v, &lt;&nbsp;50&nbsp;W. Parasitic Lindenblad (AA2TX style, default) with strong low-elevation gain; QFH kept as legacy. Calculator, 3D model, live NEC2 simulation and 3D radiation pattern.',
     source: 'source',
     'theme.light': 'Day', 'theme.dark': 'Night', 'theme.auto': 'Auto',
-    'h.status': 'Status', 'h.calc': 'Calculator', 'h.sim': 'NEC2 simulation', 'h.sats': 'Satellites',
+    'h.params': 'Parameters', 'h.status': 'Status', 'h.calc': 'Calculator', 'h.sim': 'NEC2 simulation', 'h.sats': 'Satellites',
 
     'a.lindenblad': 'Parasitic Lindenblad', 'a.qfh': 'QFH', 'a.legacy': 'legacy',
     'ph.lb.calc': 'Lindenblad calculator + geometry (AA2TX 70 cm reference)',
@@ -37,7 +37,7 @@ export const dict = {
     'dl.note': 'λ {lambda} mm · RHCP: looking toward the hub, left end of each element up (inverse of a classic Lindenblad)',
     'v.lb.legend': '■ aluminium <span style="color:#e8590c">■ parasitic</span> ■ PVC / 3D print · drag to rotate',
     's.lb.design': '{freq} MHz, N {n}, top {top} mm, sleeve {sleeve}, parasitic {pl} mm at r {r} mm, tilt {tilt}°',
-    's.lb.live': 'Live nec2++ (WebAssembly) for the inputs above: {design}. Z includes feed stray C.',
+    's.lb.live': 'Live nec2++ (WebAssembly) for the current parameters: {design}. Z includes feed stray C.',
     'p.p3': '3D radiation pattern at f0 (radius and color = gain, dB scale)',
     'p3.rhcp': 'RHCP', 'p3.lhcp': 'LHCP', 'p3.total': 'total',
     'p3.legend': '{f} MHz · {kind} · max {max} dBic · scale {range} dB · rings: horizon, 30°, 60° · drag to rotate',
@@ -80,7 +80,7 @@ export const dict = {
     'p.mhz': '{f} MHz',
 
     's.qfh.design': '{freq} MHz, {cable}, {turns} turn, D/H {dh}, bend R {r} mm',
-    's.qfh.live': 'Live nec2++ (WebAssembly) for the inputs above: {design}. Unoptimized Coppens dimensions: resonance is ~2.5 % low.',
+    's.qfh.live': 'Live nec2++ (WebAssembly) for the current parameters: {design}. Unoptimized Coppens dimensions: resonance is ~2.5 % low.',
     's.pre': 'Precomputed with nec2++ for the reference design: {design} ({seg} segments).',
     's.running': '⏳ nec2++ (WASM) running, {seg} segments…',
     's.done': '✓ {seg} segments, {sec} s in your browser',
@@ -96,7 +96,7 @@ export const dict = {
     intro: 'Всенаправленные антенны круговой поляризации для низкоорбитальных спутников 2&nbsp;м и 70&nbsp;см, RHCP, полный дуплекс V/u и U/v, &lt;&nbsp;50&nbsp;Вт. Пассивный Линденблад (по AA2TX, по умолчанию) с высоким усилением на малых углах места; QFH оставлена как устаревшая. Калькулятор, 3D-модель, NEC2 в браузере и объёмная диаграмма направленности.',
     source: 'исходники',
     'theme.light': 'День', 'theme.dark': 'Ночь', 'theme.auto': 'Авто',
-    'h.status': 'Состояние', 'h.calc': 'Калькулятор', 'h.sim': 'Моделирование NEC2', 'h.sats': 'Спутники',
+    'h.params': 'Параметры', 'h.status': 'Состояние', 'h.calc': 'Калькулятор', 'h.sim': 'Моделирование NEC2', 'h.sats': 'Спутники',
 
     'a.lindenblad': 'Пассивный Линденблад', 'a.qfh': 'QFH', 'a.legacy': 'устар.',
     'ph.lb.calc': 'Калькулятор Линденблада + геометрия (опорная 70 см AA2TX)',
@@ -126,7 +126,7 @@ export const dict = {
     'dl.note': 'λ {lambda} мм · RHCP: если смотреть на втулку, левый конец каждого элемента поднят (обратно классическому Линденбладу)',
     'v.lb.legend': '■ алюминий <span style="color:#e8590c">■ пассивные</span> ■ ПВХ / печать · вращайте мышью',
     's.lb.design': '{freq} МГц, N {n}, верх {top} мм, рукав {sleeve}, пассивные {pl} мм на r {r} мм, наклон {tilt}°',
-    's.lb.live': 'nec2++ (WebAssembly) в реальном времени для параметров выше: {design}. Z с учётом паразитной ёмкости питания.',
+    's.lb.live': 'nec2++ (WebAssembly) в реальном времени для текущих параметров: {design}. Z с учётом паразитной ёмкости питания.',
     'p.p3': 'Объёмная диаграмма направленности на f0 (радиус и цвет = усиление, шкала дБ)',
     'p3.rhcp': 'RHCP', 'p3.lhcp': 'LHCP', 'p3.total': 'сумма',
     'p3.legend': '{f} МГц · {kind} · макс. {max} дБic · шкала {range} дБ · кольца: горизонт, 30°, 60° · вращайте мышью',
@@ -169,7 +169,7 @@ export const dict = {
     'p.mhz': '{f} МГц',
 
     's.qfh.design': '{freq} МГц, {cable}, {turns} витка, D/H {dh}, радиус изгиба {r} мм',
-    's.qfh.live': 'nec2++ (WebAssembly) в реальном времени для параметров выше: {design}. Размеры по Коппенсу без оптимизации: резонанс занижен на ~2,5 %.',
+    's.qfh.live': 'nec2++ (WebAssembly) в реальном времени для текущих параметров: {design}. Размеры по Коппенсу без оптимизации: резонанс занижен на ~2,5 %.',
     's.pre': 'Заранее рассчитано в nec2++ для опорной конструкции: {design} ({seg} сегментов).',
     's.running': '⏳ nec2++ (WASM) считает, {seg} сегментов…',
     's.done': '✓ {seg} сегментов, {sec} с в вашем браузере',

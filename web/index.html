@@ -17,7 +17,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="toolbar"></div>
+  <aside id="panel">
+    <div id="toolbar"></div>
+    <h2 data-i18n="h.params">Parameters</h2>
+    <div id="antenna-select"></div>
+    <form id="inputs"></form>
+    <div id="sim-controls"></div>
+    <p class="note" id="sim-status"></p>
+  </aside>
   <header>
     <h1 data-i18n="h1">Lindenblad and QFH antennas for HAM LEO satellites</h1>
     <p><span data-i18n="intro"></span> <a href="https://github.com/AI6YP/antenna" data-i18n="source">source</a></p>
@@ -31,8 +38,6 @@
 
     <section id="calc">
       <h2 data-i18n="h.calc">Calculator</h2>
-      <div id="antenna-select"></div>
-      <form id="inputs"></form>
       <div class="cols">
         <div id="dims"></div>
         <div id="view3d"></div>
@@ -42,8 +47,6 @@
     <section id="sim">
       <h2 data-i18n="h.sim">NEC2 simulation</h2>
       <p class="note" id="sim-note"></p>
-      <p class="note" id="sim-status"></p>
-      <div id="sim-controls"></div>
       <div class="grid">
         <figure><figcaption data-i18n="p.swr"></figcaption><div id="plot-swr"></div></figure>
         <figure><figcaption data-i18n="p.z"></figcaption><div id="plot-z"></div></figure>
