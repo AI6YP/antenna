@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QFH antennas for HAM LEO satellites — AI6YP</title>
+  <title>Lindenblad and QFH antennas for HAM LEO satellites — AI6YP</title>
   <script>
     // apply saved theme / language before first paint
     try {
@@ -19,7 +19,7 @@
 <body>
   <div id="toolbar"></div>
   <header>
-    <h1 data-i18n="h1">QFH antennas for HAM LEO satellites</h1>
+    <h1 data-i18n="h1">Lindenblad and QFH antennas for HAM LEO satellites</h1>
     <p><span data-i18n="intro"></span> <a href="https://github.com/AI6YP/antenna" data-i18n="source">source</a></p>
   </header>
 
@@ -31,6 +31,7 @@
 
     <section id="calc">
       <h2 data-i18n="h.calc">Calculator</h2>
+      <div id="antenna-select"></div>
       <form id="inputs"></form>
       <div class="cols">
         <div id="dims"></div>
@@ -49,6 +50,11 @@
         <figure><figcaption data-i18n="p.gain"></figcaption><div id="plot-gain"></div></figure>
         <figure><figcaption data-i18n="p.ar"></figcaption><div id="plot-ar"></div></figure>
       </div>
+      <figure class="pattern">
+        <figcaption data-i18n="p.p3"></figcaption>
+        <div id="pattern-controls"></div>
+        <div id="pattern3d"></div>
+      </figure>
     </section>
 
     <section id="sats">

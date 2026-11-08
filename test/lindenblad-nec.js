@@ -3,8 +3,8 @@
 const {expect} = require('chai');
 const {lindenblad, lindenbladNec, necout, sim: simLib} = require('../lib/index.js');
 
-// AA2TX used ferrite choke ~ ideal; sleeve choke tested separately
-const base = {...require('../examples/lindenblad-70cm.json'), env: {ground: 'free'}, feed: {choke: 'ideal'}};
+// AA2TX: symmetric dipole, ferrite choke ~ ideal; sleeve choke tested separately
+const base = {...require('../examples/lindenblad-70cm.json'), env: {ground: 'free'}, feed: {choke: 'ideal'}, driven: {top: 153.975, sleeve: 153.975}};
 delete base.type;
 
 const at = (pat, theta, phi = 0) => pat.points.find(p => p.theta === theta && p.phi === phi);
@@ -87,10 +87,9 @@ describe('lindenblad-nec: sleeve choke (NEC)', () => {
       return simLib.stats(lindenbladNec.simulate(res), res.input);
     };
     expect(run({choke: 'none'}).swr).to.be.above(2.5);
-    const qw = lindenblad.calc(base).dims.sleeve.lengthQW;
     const st = run({choke: 'sleeve'});
     expect(st.swr).to.be.below(2);
-    const tuned = lindenblad.calc({...base, driven: {sleeve: Math.round(qw) - 2}, feed: {choke: 'sleeve'}});
+    const tuned = lindenblad.calc({...base, driven: {top: 142, sleeve: null}, feed: {choke: 'sleeve'}}); // auto = lambda/4
     expect(simLib.stats(lindenbladNec.simulate(tuned), tuned.input).swr).to.be.below(1.3);
   });
 });

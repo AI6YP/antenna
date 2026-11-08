@@ -1,94 +1,115 @@
-import lib from '../lib/browser.js';
 import {createView} from './view3d.js';
+import {createPatternView, kinds as patKinds, ranges as patRanges} from './pattern3d.js';
 import * as plots from './plots.js';
 import * as status from './status.js';
 import * as sats from './sats.js';
 import * as toolbar from './toolbar.js';
 import {t, apply as applyI18n, onLang} from './i18n.js';
+import lindenblad from './antennas/lindenblad.js';
+import qfh from './antennas/qfh.js';
 
-const {qfh, qfhNec, cables} = lib;
+const adapters = {lindenblad, qfh}; // first = default
 
-const presets = {
-  '2m': {freq: 145.6, band: [144.3, 146.0], conductor: {type: 'coax', name: 'RG-213', od: 10.3}, bendRadius: 60, data: 'qfh-2m'},
-  '70cm': {freq: 435.5, band: [432.1, 438.0], conductor: {type: 'coax', name: 'RG-58', od: 4.95}, bendRadius: 25, data: 'qfh-70cm'}
+const url = new URL(location.href);
+let A = adapters[url.searchParams.get('a')] || lindenblad;
+let state = A.init(A.defaultBand);
+
+// ---- antenna selector -------------------------------------------------------
+const selEl = document.getElementById('antenna-select');
+const renderSelector = () => {
+  selEl.innerHTML = '<span class="seg">' + Object.values(adapters).map(a =>
+    '<button type="button" data-a="' + a.type + '" aria-pressed="' + (a === A) + '">' + t('a.' + a.type) +
+    (a.legacy ? ' <small>(' + t('a.legacy') + ')</small>' : '') + '</button>').join('') + '</span>';
 };
+selEl.addEventListener('click', e => {
+  const b = e.target.closest('button[data-a]');
+  if (!b || adapters[b.dataset.a] === A) { return; }
+  A = adapters[b.dataset.a];
+  state = A.init(A.defaultBand);
+  const u = new URL(location.href);
+  u.searchParams.set('a', A.type);
+  history.replaceState(null, '', u);
+  liveOk = true;
+  lastRes = null;
+  lastSim = null;
+  renderAll();
+  recalc();
+});
 
-const fields = [
-  {key: 'band', type: 'select', options: Object.keys(presets)},
-  {key: 'freq', step: 0.1},
-  {key: 'turns', type: 'select', options: [0.5, 0.75, 1, 1.25, 1.5]},
-  {key: 'ratioDH', step: 0.01},
-  {key: 'cable', type: 'select', options: Object.keys(cables.cables)},
-  {key: 'bendRadius', step: 1},
-  {key: 'arm', step: 1},
-  {key: 'polarization', type: 'select', options: ['RHCP', 'LHCP']}
-];
-
-const state = {band: '70cm', freq: 435.5, turns: 0.5, ratioDH: 0.44, cable: 'RG-58', bendRadius: 25, arm: 20, polarization: 'RHCP'};
-
+// ---- form (generated from adapter fields) -----------------------------------
 const form = document.getElementById('inputs');
-const renderForm = () => {
-  form.innerHTML = fields.map(f => {
-    const v = state[f.key];
-    const ctl = f.type === 'select'
-      ? '<select name="' + f.key + '">' + f.options.map(o => '<option' + (String(o) === String(v) ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>'
-      : '<input name="' + f.key + '" type="number" step="' + f.step + '" value="' + v + '">';
-    return '<label>' + t('f.' + f.key) + ctl + '</label>';
-  }).join('');
-};
-
-const toInput = () => {
-  const pre = presets[state.band];
-  const c = cables.cables[state.cable];
-  return {
-    freq: +state.freq, band: pre.band, turns: +state.turns, ratioDH: +state.ratioDH,
-    conductor: {type: 'coax', name: state.cable, od: c.od},
-    bendRadius: +state.bendRadius, polarization: state.polarization,
-    frame: {standard: 'BY', mast: 32, arm: +state.arm}
-  };
-};
-
-const fmt = x => x.toFixed(1);
-const renderDims = res => {
-  const d = res.dims;
-  const rows = ['totalC', 'total', 'D', 'H', 'Dc', 'Di', 'side', 'sideC'];
-  document.getElementById('dims').innerHTML =
-    '<table><thead><tr><th>' + t('d.mm') + '</th><th class="big">' + t('d.big') + '</th><th class="small">' + t('d.small') +
-    '</th></tr></thead><tbody>' +
-    rows.map(k => '<tr><td>' + t('d.' + k) + '</td><td>' + fmt(d.big[k]) + '</td><td>' + fmt(d.small[k]) + '</td></tr>').join('') +
-    '</tbody></table>' +
-    '<p class="note">' + t('d.note', {lambda: fmt(d.wavelength), lambdaC: fmt(d.wavelengthC), bend: fmt(d.bendCorr), opt: fmt(d.optDiam)}) + '</p>' +
-    (d.big.Dc < 0.3 * d.big.D ? '<p class="note">' + t('d.warnBend') + '</p>' : '');
-};
-
-const view = createView(document.getElementById('view3d'));
 let lastRes = null;
+const fmtV = (f, v) => (typeof v === 'number' ? (f.step < 1 ? v.toFixed(1) : String(Math.round(v * 100) / 100)) : String(v));
+
+// effective value for nullable (auto) fields: from calc dims
+const autoValue = key => (key === 'driven.sleeve' && lastRes ? lastRes.dims.driven.bottom : undefined);
+
+const control = f => {
+  const v = A.get(state, f.key);
+  const name = ' data-key="' + f.key + '"';
+  if (f.type === 'select') {
+    return '<select' + name + '>' + f.options.map(o => '<option' + (String(o) === String(v) ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>';
+  }
+  if (f.type === 'number') {
+    return '<input' + name + ' type="number" step="' + f.step + '" value="' + v + '">';
+  }
+  const isAuto = f.nullable && v === null;
+  const val = isAuto ? autoValue(f.key) : v;
+  const dis = isAuto ? ' disabled' : '';
+  return '<span class="range"><input' + name + ' type="range" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + val + '"' + dis + '>' +
+    '<input' + name + ' type="number" step="' + f.step + '" value="' + fmtV(f, val ?? 0) + '"' + dis + '></span>' +
+    (f.nullable ? '<label class="auto"><input type="checkbox" data-auto="' + f.key + '"' + (isAuto ? ' checked' : '') + '> ' + t('f.auto') + '</label>' : '');
+};
+
+const renderForm = () => {
+  form.innerHTML = A.fields(state).map(f =>
+    '<label class="' + (f.type === 'range' ? 'wide' : '') + '"><span>' + t('f.' + f.key) + '</span>' + control(f) + '</label>').join('');
+};
+
+form.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.auto) {
+    const key = el.dataset.auto;
+    state = A.set(state, key, el.checked ? null : Math.round(autoValue(key)));
+    recalc();
+    renderForm();
+    return;
+  }
+  const key = el.dataset.key;
+  if (!key) { return; }
+  if (el.value === '') { return; }
+  state = A.set(state, key, el.value);
+  if (key === 'band') {
+    renderForm();
+  } else {
+    // sync twin (range <-> number)
+    form.querySelectorAll('[data-key="' + key + '"]').forEach(o => { if (o !== el) { o.value = el.value; } });
+  }
+  recalc();
+});
+
+// ---- calc + 3D ----------------------------------------------------------------
+const view = createView(document.getElementById('view3d'));
 
 const recalc = () => {
   try {
-    const res = qfh.calc(toInput());
+    const res = A.calc(A.toInput(state));
     lastRes = res;
-    renderDims(res);
-    view.update(res);
+    document.getElementById('dims').innerHTML = A.renderDims(res, t);
+    view.update(res, A.build3d);
+    // refresh auto (nullable) displays
+    form.querySelectorAll('input[data-auto]:checked').forEach(cb => {
+      const v = autoValue(cb.dataset.auto);
+      form.querySelectorAll('[data-key="' + cb.dataset.auto + '"]').forEach(o => { o.value = v.toFixed(1); });
+    });
     scheduleSim();
   } catch (err) {
     document.getElementById('dims').innerHTML = '<p class="note">⚠ ' + err.message + '</p>';
   }
 };
 
-form.addEventListener('input', e => {
-  const k = e.target.name;
-  state[k] = e.target.value;
-  if (k === 'band') {
-    const pre = presets[state.band];
-    Object.assign(state, {freq: pre.freq, cable: pre.conductor.name, bendRadius: pre.bendRadius});
-    renderForm();
-  }
-  recalc();
-});
-
-// precomputed NEC results
-const sim = {ground: 'free'};
+// ---- simulation -------------------------------------------------------------
+const sim = {ground: 'free', kind: 'rhcp', range: 30};
 const simControls = document.getElementById('sim-controls');
 const renderSimControls = () => {
   simControls.innerHTML = ['free', 'poor'].map(g => '<label><input type="radio" name="ground" value="' + g + '"' +
@@ -99,32 +120,57 @@ simControls.addEventListener('change', e => {
   if (liveOk) { scheduleSim(); } else { loadSim(); }
 });
 
+// 3D pattern controls
+const patView = createPatternView(document.getElementById('pattern3d'));
+const patControls = document.getElementById('pattern-controls');
+const renderPatControls = () => {
+  const seg = (name, list, cur, label) => '<span class="seg">' + list.map(v =>
+    '<button type="button" data-' + name + '="' + v + '" aria-pressed="' + (v === cur) + '">' + label(v) + '</button>').join('') + '</span>';
+  patControls.innerHTML = seg('kind', patKinds, sim.kind, k => t('p3.' + k)) + ' ' + seg('range', patRanges, sim.range, r => r + ' dB');
+};
+patControls.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) { return; }
+  if (b.dataset.kind) { sim.kind = b.dataset.kind; }
+  if (b.dataset.range) { sim.range = +b.dataset.range; }
+  renderPatControls();
+  if (lastSim) { showPattern(lastSim.data); }
+});
+
 const put = (id, node) => { const el = document.getElementById(id); el.replaceChildren(node); };
 
-// last shown simulation + status, re-rendered on language change
 let lastSim = null, lastStatus = null;
-
-const designText = i => t('s.design', {freq: i.freq, cable: i.conductor.name, turns: i.turns, dh: i.ratioDH, r: i.bendRadius});
 
 const setStatus = st => {
   lastStatus = st;
   statusEl.textContent = st ? t(st.key, st.vars) : '';
 };
 
+const showPattern = data => {
+  const p = data.patterns.find(x => x.sphere);
+  const r = patView.update(p && p.sphere, {kind: sim.kind, range: sim.range});
+  patView.setLegend(r ? t('p3.legend', {f: p.freq.toFixed(1), kind: t('p3.' + sim.kind), max: r.gmax.toFixed(1), range: sim.range}) : t('p3.none'));
+};
+
 const showSim = (data, noteKey, vars) => {
   lastSim = {data, noteKey, vars};
-  document.getElementById('sim-note').textContent = t(noteKey, {...vars, design: designText(data.input)});
+  document.getElementById('sim-note').textContent = t(noteKey, {...vars, design: A.designText(data.input, t)});
   put('plot-swr', plots.swr(data));
   put('plot-z', plots.z(data));
   put('plot-gain', plots.gain(data));
   put('plot-ar', plots.ar(data));
+  showPattern(data);
 };
 
 // fallback: precomputed results for reference design
 const loadSim = async () => {
-  const name = presets[state.band].data + '-' + sim.ground;
-  const data = await (await fetch('data/' + name + '.json')).json();
-  showSim(data, 's.pre', {seg: data.segments});
+  const name = A.type + '-' + state.band + '-' + sim.ground;
+  try {
+    const data = await (await fetch('data/' + name + '.json')).json();
+    showSim(data, 's.pre', {seg: data.segments});
+  } catch (err) {
+    setStatus({key: 's.error', vars: {msg: err.message}});
+  }
 };
 
 // live: nec2++ WASM in a Web Worker
@@ -149,20 +195,20 @@ let simTimer = null, simSeq = 0, liveOk = true;
 
 const runLive = async () => {
   const seq = ++simSeq;
-  const input = {...toInput(), env: {ground: sim.ground}};
-  const res = qfh.calc(input);
-  const deck = qfhNec.deck(res);
+  const inp = A.toInput(state);
+  const res = A.calc({...inp, env: {...(inp.env || {}), ground: sim.ground}});
+  const deck = A.nec.deck(res, A.necOpts);
   setStatus({key: 's.running', vars: {seg: deck.segments}});
   try {
     const {out, ms} = await necRun(deck.text);
     if (seq !== simSeq) { return; } // superseded
-    const s = qfhNec.summarize(out, deck);
+    const s = A.nec.summarize(out, deck);
     const data = {
       input: res.input,
       sweep: s.sweep.map(x => ({freq: x.freq, r: x.z.re, x: x.z.im, swr: x.swr})),
       patterns: s.patterns
     };
-    showSim(data, 's.live', {});
+    showSim(data, A.liveKey, {});
     setStatus({key: 's.done', vars: {seg: deck.segments, sec: (ms / 1000).toFixed(2)}});
   } catch (err) {
     liveOk = false;
@@ -177,20 +223,22 @@ function scheduleSim () {
   simTimer = setTimeout(runLive, 300);
 }
 
-// language-dependent rendering
+// ---- language-dependent rendering ---------------------------------------------
 const renderAll = () => {
   applyI18n();
-  view.setLegend(t('v.legend'));
+  view.setLegend(t(A.legendKey));
   status.render(document.getElementById('status-list'));
   sats.render(document.getElementById('sat-table'));
+  renderSelector();
   renderForm();
   renderSimControls();
-  if (lastRes) { renderDims(lastRes); }
+  renderPatControls();
+  if (lastRes) { document.getElementById('dims').innerHTML = A.renderDims(lastRes, t); }
   if (lastSim) { showSim(lastSim.data, lastSim.noteKey, lastSim.vars); }
   setStatus(lastStatus);
 };
 onLang(renderAll);
 
 toolbar.render(document.getElementById('toolbar'));
-renderAll();
 recalc();
+renderAll();

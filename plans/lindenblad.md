@@ -182,10 +182,21 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
        main tuning knob (AF6SA: trim sleeve only); note: top half shrinks as sleeve grows (fixed overall)
      - over poor ground at 1.5 m: AR 0–30° rises to 4–10 dB at some elevations (V/H reflection differ)
    - 2m draft with sleeve choke (465 mm, f0 151.7 MHz): SWR 2.24 → retune in phase 4
+   - [x] driven.top + driven.sleeve independent; sleeve null (default) = λ/4 stub length (choke.quarterWave);
+         default top 142 mm (NEC: SWR 1.24 @ 435.5, band max 1.42, sleeve auto 159.9, RG-58, Q 100, 4 pF)
+   - [x] full-sphere RP at f0 (sphere: {dTheta 5, dPhi 5}; deck.patternKinds names RP tables) → 3D view
 4. 2m scaled design + retune (manual sliders)
    - draft examples/lindenblad-2m.json = AA2TX × 2.991, driven Ø25, parasitic Ø10, PVC 1000:
      free space Z(145.6) = 34.2 + j9.5, SWR-min 144.9 MHz 1.53; pattern/AR same as 70cm → retune
 5. Web: selector + param sliders + 3D (driven, parasitic, hub, arms, mast) + plots
+   - [x] web/antennas/{lindenblad,qfh}.js adapters (presets, fields, dims, 3D build, NEC lib);
+         main.js generic: antenna selector (?a=), form from fields (range + number, auto checkbox)
+   - [x] web/view3d.js generic scene + helpers; Lindenblad: driven/sleeve, printed hub + adapters,
+         PVC arms, parasitic, PVC section + coax, mast adapter, metal mast
+   - [x] web/pattern3d.js: 3D radiation pattern (radius + color = gain over 20/30/40 dB, RHCP/LHCP/total,
+         horizon / 30° / 60° rings); precomputed data incl. sphere (scripts/build-data.js)
+   - [x] i18n EN/RU, status list = Lindenblad phases; verified headless Chromium (live 0.5 s free, 3 s ground)
+   - [ ] cut list / BOM, Replicad part preview
 6. 3D parts: Replicad models (hub, adjustable parasitic adapter, mast adapters, spacers) → STL/STEP
 7. Post-MVP: optimizer (lengths, radius, tilt, N → AR < 3 dB 5–45°, max RHCP 5–30°, SWR)
 8. Post-MVP: classic (300 Ω twin-lead) + EZ variants; W6SHP tables as fixtures

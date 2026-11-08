@@ -27,7 +27,7 @@ for (const name of designs) {
     const input = {...base1, env: {...base1.env, ground}};
     const res = antenna.calc(input);
     const t0 = Date.now();
-    const sim = antenna.simulate(res);
+    const sim = antenna.simulate(res, {sphere: {dTheta: 5, dPhi: 5}}); // + full sphere for 3D pattern view
     const file = name + '-' + ground + '.json';
     fs.writeFileSync(path.join(out, file), JSON.stringify({
       name, type: antenna.type, ground,

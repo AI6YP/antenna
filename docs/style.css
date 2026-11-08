@@ -27,11 +27,22 @@ footer { color: var(--muted); padding: 32px 16px; font-size: 0.9em; }
 form#inputs { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 16px; }
 form#inputs label { display: flex; flex-direction: column; font-size: 0.85em; color: var(--muted); }
 form#inputs input, form#inputs select { font-size: 1rem; padding: 3px 6px; width: 8em; }
+form#inputs label.wide { min-width: 15em; }
+form#inputs .range { display: flex; gap: 6px; align-items: center; }
+form#inputs .range input[type="range"] { width: 9em; padding: 0; }
+form#inputs .range input[type="number"] { width: 5.5em; }
+form#inputs label.auto { flex-direction: row; align-items: center; gap: 4px; }
+form#inputs label.auto input { width: auto; }
+#antenna-select { margin: 8px 0 12px; }
+#antenna-select small { opacity: 0.75; }
 
 .cols { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(320px, 1.2fr); gap: 16px; }
 @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
 #view3d { height: 520px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; position: relative; }
-#view3d .legend { position: absolute; left: 8px; top: 6px; font-size: 0.8em; color: var(--muted); }
+#view3d .legend, #pattern3d .legend { position: absolute; left: 8px; top: 6px; font-size: 0.8em; color: var(--muted); }
+figure.pattern { margin-top: 16px; }
+#pattern-controls { margin: 6px 0; }
+#pattern3d { height: 560px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; position: relative; }
 
 table { border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.92em; }
 th, td { padding: 3px 10px; border-bottom: 1px solid var(--line); text-align: right; }

@@ -1,21 +1,49 @@
 [
   {
+    "name": "lindenblad-2m",
+    "type": "lindenblad",
+    "ground": "free",
+    "file": "lindenblad-2m-free.json"
+  },
+  {
+    "name": "lindenblad-2m",
+    "type": "lindenblad",
+    "ground": "poor",
+    "file": "lindenblad-2m-poor.json"
+  },
+  {
+    "name": "lindenblad-70cm",
+    "type": "lindenblad",
+    "ground": "free",
+    "file": "lindenblad-70cm-free.json"
+  },
+  {
+    "name": "lindenblad-70cm",
+    "type": "lindenblad",
+    "ground": "poor",
+    "file": "lindenblad-70cm-poor.json"
+  },
+  {
     "name": "qfh-2m",
+    "type": "qfh",
     "ground": "free",
     "file": "qfh-2m-free.json"
   },
   {
     "name": "qfh-2m",
+    "type": "qfh",
     "ground": "poor",
     "file": "qfh-2m-poor.json"
   },
   {
     "name": "qfh-70cm",
+    "type": "qfh",
     "ground": "free",
     "file": "qfh-70cm-free.json"
   },
   {
     "name": "qfh-70cm",
+    "type": "qfh",
     "ground": "poor",
     "file": "qfh-70cm-poor.json"
   }

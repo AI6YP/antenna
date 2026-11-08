@@ -6,8 +6,8 @@ const {lindenblad, geom} = require('../lib/index.js');
 const close = (a, b, eps = 1e-9) => expect(a).to.be.closeTo(b, eps);
 
 describe('lindenblad', () => {
-  it('defaults = AA2TX 70cm (inch -> mm)', () => {
-    const {dims} = lindenblad.calc({});
+  it('AA2TX 70cm (inch -> mm), sleeve = top', () => {
+    const {dims} = lindenblad.calc({driven: {top: 153.975, sleeve: 153.975}});
     close(dims.driven.length, 12.375 * 25.4, 0.1);
     close(dims.driven.top, 6.0625 * 25.4, 0.05);
     close(dims.driven.bottom, dims.driven.top);
@@ -17,9 +17,17 @@ describe('lindenblad', () => {
     expect(dims.parasitic.n).to.equal(4);
   });
 
-  it('sleeve sets bottom half, top = rest', () => {
-    const {dims, geometry: g} = lindenblad.calc({driven: {sleeve: 140}});
+  it('default sleeve = quarter-wave stub length', () => {
+    const {dims} = lindenblad.calc({});
+    close(dims.driven.bottom, dims.sleeve.lengthQW);
+    close(dims.sleeve.f0, 435.5, 1e-6);
+    expect(dims.sleeve.auto).to.equal(true);
+  });
+
+  it('top + sleeve independent, length = top + gap + sleeve', () => {
+    const {dims, geometry: g} = lindenblad.calc({driven: {top: 150, sleeve: 140}});
     close(dims.driven.bottom, 140);
+    close(dims.driven.top, 150);
     close(dims.driven.top + dims.driven.bottom + dims.driven.gap, dims.driven.length);
     close(g.driven.bottom[0][2], -dims.driven.gap / 2 - 140);
     close(g.driven.top[1][2], dims.driven.gap / 2 + dims.driven.top);
@@ -66,7 +74,8 @@ describe('lindenblad', () => {
     expect(() => lindenblad.calc({parasitic: {n: 2.5}})).to.throw(/parasitic.n/);
     expect(() => lindenblad.calc({parasitic: {tilt: 90}})).to.throw(/tilt/);
     expect(() => lindenblad.calc({parasitic: {radius: 5}})).to.throw(/clear/);
-    expect(() => lindenblad.calc({driven: {sleeve: 400}})).to.throw(/sleeve/);
+    expect(() => lindenblad.calc({driven: {sleeve: -1}})).to.throw(/sleeve/);
+    expect(() => lindenblad.calc({driven: {top: 0}})).to.throw(/top/);
     expect(() => lindenblad.calc({variant: 'classic'})).to.throw(/not implemented/);
   });
 });
