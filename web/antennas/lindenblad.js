@@ -37,6 +37,7 @@ const fields = state => {
     {key: 'parasitic.od', type: 'range', step: 1, min: 1, max: 20},
     {key: 'parasitic.radius', type: 'range', step: 1, ...rel(state, 'parasitic.radius', 0.5)},
     {key: 'parasitic.tilt', type: 'range', step: 1, min: 0, max: 60},
+    {key: 'parasitic.lean', type: 'range', step: 1, min: -60, max: 60},
     {key: 'parasitic.z', type: 'range', step: 1, min: -Math.round(pl / 2), max: Math.round(pl / 2)},
     {key: 'feed.choke', type: 'select', options: ['sleeve', 'ideal', 'none']},
     {key: 'feed.coax', type: 'select', options: ['RG-58', 'RG-316', 'LMR-240']},
@@ -70,7 +71,8 @@ const renderDims = (res, t) => {
     row('dl.pod', f1(q.od)) +
     row('dl.radius', f1(q.radius), (q.radiusLambda).toFixed(3) + ' λ') +
     row('dl.tilt', q.tilt + '°', t('dl.span', {dz: f1(q.dz), dh: f1(q.dh)})) +
-    row('dl.clear', f1(q.clearance)) +
+    row('dl.lean', q.lean + '°', t('dl.leanNote', {elev: f1(q.elev), dr: f1(q.dr)})) +
+    row('dl.clear', f1(q.clearance), 'r min ' + f1(q.rMin)) +
     '</tbody></table>' +
     '<p class="note">' + t('dl.note', {lambda: f1(d.wavelength)}) + '</p>';
 };
@@ -117,7 +119,7 @@ const designText = (i, t) => t('s.lb.design', {
   freq: i.freq, n: i.parasitic.n, top: i.driven.top,
   sleeve: i.driven.sleeve === null ? 'auto' : i.driven.sleeve,
   pl: i.parasitic.length, r: i.parasitic.radius, tilt: i.parasitic.tilt
-});
+}) + (i.parasitic.lean ? ', lean ' + i.parasitic.lean + '°' : '');
 
 export default {
   type: 'lindenblad', legacy: false, defaultBand: '70cm', presets,

@@ -136,7 +136,8 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
 
 - driven: sleeve wire + 1-seg feed wire (gap filled) + top wire; stray C in post-processing
 - coax: wire from sleeve mouth to mast top through PVC, sleeve choke = parallel RLC (LD 1)
-- parasitic: N wires, center at (r, φ_k = 2πk/N), tangent direction tilted ±30° (sign = polarization)
+- parasitic: N wires, center at (r, φ_k = 2πk/N), tangent direction tilted ±30° (sign = polarization),
+  element plane leaned by `lean` about the tangent axis
 - mast: metal wire below PVC section, floating; coax on mast = mast wire
 - free space → GN 2 poor ground; sweep f0 ± 5 %, 41 steps; RP elev 0–90 + azimuth cut (ripple vs N)
 - tilt sign check: RHCP − LHCP at 10–30° > 15 dB
@@ -185,6 +186,11 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
    - [x] driven.top + driven.sleeve independent; sleeve null (default) = λ/4 stub length (choke.quarterWave);
          default top 142 mm (NEC: SWR 1.24 @ 435.5, band max 1.42, sleeve auto 159.9, RG-58, Q 100, 4 pF)
    - [x] full-sphere RP at f0 (sphere: {dTheta 5, dPhi 5}; deck.patternKinds names RP tables) → 3D view
+   - [x] parasitic.lean: element plane rotated about its tangent axis (0 = vertical tangent plane,
+         > 0 upper end outward); d = cos(tilt) t + s sin(tilt) (cos(lean) z + sin(lean) r);
+         clearance = closest approach of element axis to mast; dims elev / dr / rMin
+     - 70cm free space: lean ±30 → SWR 1.24 → 1.37–1.50, azimuth ripple 0.01 → ~0.2 dB, AR at 30° elev
+       3.9 → 1.3 dB (lean +30) / 2.7 dB (−30) — candidate optimizer variable
 4. 2m scaled design + retune (manual sliders)
    - draft examples/lindenblad-2m.json = AA2TX × 2.991, driven Ø25, parasitic Ø10, PVC 1000:
      free space Z(145.6) = 34.2 + j9.5, SWR-min 144.9 MHz 1.53; pattern/AR same as 70cm → retune
