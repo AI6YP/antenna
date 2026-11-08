@@ -1,0 +1,13 @@
+{
+  "freq": 435.5,
+  "band": [
+    432.1,
+    438.0
+  ],
+  "conductor": {
+    "type": "coax",
+    "name": "RG-58",
+    "od": 4.95
+  },
+  "bendRadius": 25
+}

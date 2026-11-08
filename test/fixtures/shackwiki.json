@@ -1,0 +1,1017 @@
+{
+  "date": "2026-11-08",
+  "units": "mm, MHz",
+  "source": "shackwiki.com assets/ant2.js (after Coppens)",
+  "url": "https://shackwiki.com/qfh-antenna-calculator/",
+  "notes": "c=299792.458; wire clamped 0..15.999; outputs rounded to 0.1 mm here (page shows 1 mm)",
+  "cases": [
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 0.5,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 258.4,
+          "H": 861.5,
+          "side": 952.3,
+          "Dc": 228.4,
+          "Di": 251.4
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 245.7,
+          "H": 819.1,
+          "side": 905.5,
+          "Dc": 215.7,
+          "Di": 238.7
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 0.5,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 321.8,
+          "H": 731.3,
+          "side": 889,
+          "Dc": 291.8,
+          "Di": 314.8
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 306,
+          "H": 695.4,
+          "side": 845.3,
+          "Dc": 276,
+          "Di": 299
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 0.75,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 238.3,
+          "H": 794.2,
+          "side": 972.5,
+          "Dc": 208.3,
+          "Di": 231.3
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 226.5,
+          "H": 755.1,
+          "side": 924.7,
+          "Dc": 196.5,
+          "Di": 219.5
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 0.75,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 283.3,
+          "H": 643.9,
+          "side": 927.5,
+          "Dc": 253.3,
+          "Di": 276.3
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 269.4,
+          "H": 612.2,
+          "side": 881.9,
+          "Dc": 239.4,
+          "Di": 262.4
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 1,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 217,
+          "H": 723.2,
+          "side": 993.8,
+          "Dc": 187,
+          "Di": 210
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 206.3,
+          "H": 687.7,
+          "side": 944.9,
+          "Dc": 176.3,
+          "Di": 199.3
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 137.5,
+        "turns": 1,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2180.3,
+        "big": {
+          "totalC": 2421.6,
+          "D": 248.2,
+          "H": 564.2,
+          "side": 962.5,
+          "Dc": 218.2,
+          "Di": 241.2
+        },
+        "small": {
+          "totalC": 2302.5,
+          "D": 236,
+          "H": 536.4,
+          "side": 915.2,
+          "Dc": 206,
+          "Di": 229
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.5,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 252.2,
+          "H": 840.8,
+          "side": 929.5,
+          "Dc": 132.2,
+          "Di": 241.9
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 240.2,
+          "H": 800.8,
+          "side": 885.3,
+          "Dc": 120.2,
+          "Di": 229.9
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.5,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 314.1,
+          "H": 713.8,
+          "side": 867.7,
+          "Dc": 194.1,
+          "Di": 303.8
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 299.1,
+          "H": 679.8,
+          "side": 826.4,
+          "Dc": 179.1,
+          "Di": 288.8
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.75,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 232.5,
+          "H": 775.1,
+          "side": 949.2,
+          "Dc": 112.5,
+          "Di": 222.2
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 221.5,
+          "H": 738.3,
+          "side": 904.1,
+          "Dc": 101.5,
+          "Di": 211.2
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.75,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 276.5,
+          "H": 628.4,
+          "side": 905.2,
+          "Dc": 156.5,
+          "Di": 266.2
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 263.4,
+          "H": 598.6,
+          "side": 862.2,
+          "Dc": 143.4,
+          "Di": 253.1
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 1,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 211.8,
+          "H": 705.9,
+          "side": 970,
+          "Dc": 91.8,
+          "Di": 201.5
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 201.7,
+          "H": 672.3,
+          "side": 923.8,
+          "Dc": 81.7,
+          "Di": 191.4
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 1,
+        "bendRadius": 60,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2363.4,
+          "D": 242.3,
+          "H": 550.6,
+          "side": 939.4,
+          "Dc": 122.3,
+          "Di": 232
+        },
+        "small": {
+          "totalC": 2251.1,
+          "D": 230.8,
+          "H": 524.5,
+          "side": 894.8,
+          "Dc": 110.8,
+          "Di": 220.5
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.5,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 246.9,
+          "H": 823.2,
+          "side": 910,
+          "Dc": 186.9,
+          "Di": 240
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 234.9,
+          "H": 783.1,
+          "side": 865.7,
+          "Dc": 174.9,
+          "Di": 228
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.5,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 307.5,
+          "H": 698.8,
+          "side": 849.4,
+          "Dc": 247.5,
+          "Di": 300.6
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 292.5,
+          "H": 664.8,
+          "side": 808.2,
+          "Dc": 232.5,
+          "Di": 285.6
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.75,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 227.6,
+          "H": 758.8,
+          "side": 929.3,
+          "Dc": 167.6,
+          "Di": 220.7
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 216.6,
+          "H": 722,
+          "side": 884.1,
+          "Dc": 156.6,
+          "Di": 209.7
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 0.75,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 270.7,
+          "H": 615.2,
+          "side": 886.2,
+          "Dc": 210.7,
+          "Di": 263.8
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 257.6,
+          "H": 585.3,
+          "side": 843.1,
+          "Dc": 197.6,
+          "Di": 250.7
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 1,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 207.3,
+          "H": 691.1,
+          "side": 949.6,
+          "Dc": 147.3,
+          "Di": 200.4
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 197.2,
+          "H": 657.5,
+          "side": 903.4,
+          "Dc": 137.2,
+          "Di": 190.3
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 145.6,
+        "turns": 1,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 2059,
+        "big": {
+          "totalC": 2313.8,
+          "D": 237.2,
+          "H": 539.1,
+          "side": 919.7,
+          "Dc": 177.2,
+          "Di": 230.3
+        },
+        "small": {
+          "totalC": 2201.4,
+          "D": 225.7,
+          "H": 512.9,
+          "side": 875,
+          "Dc": 165.7,
+          "Di": 218.8
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 86.2,
+          "H": 287.4,
+          "side": 317.7,
+          "Dc": 26.2,
+          "Di": 79.3
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 82.2,
+          "H": 274,
+          "side": 302.9,
+          "Dc": 22.2,
+          "Di": 75.3
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 107.4,
+          "H": 244,
+          "side": 296.6,
+          "Dc": 47.4,
+          "Di": 100.5
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 102.4,
+          "H": 232.6,
+          "side": 282.8,
+          "Dc": 42.4,
+          "Di": 95.5
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 79.5,
+          "H": 264.9,
+          "side": 324.4,
+          "Dc": 19.5,
+          "Di": 72.6
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 75.8,
+          "H": 252.6,
+          "side": 309.4,
+          "Dc": 15.8,
+          "Di": 68.9
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 94.5,
+          "H": 214.8,
+          "side": 309.4,
+          "Dc": 34.5,
+          "Di": 87.6
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 90.1,
+          "H": 204.8,
+          "side": 295,
+          "Dc": 30.1,
+          "Di": 83.2
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 72.4,
+          "H": 241.3,
+          "side": 331.5,
+          "Dc": 12.4,
+          "Di": 65.5
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 69,
+          "H": 230,
+          "side": 316.1,
+          "Dc": 9,
+          "Di": 62.1
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 30,
+        "wire": 6.9,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 807.9,
+          "D": 82.8,
+          "H": 188.2,
+          "side": 321.1,
+          "Dc": 22.8,
+          "Di": 75.9
+        },
+        "small": {
+          "totalC": 770.3,
+          "D": 79,
+          "H": 179.5,
+          "side": 306.2,
+          "Dc": 19,
+          "Di": 72.1
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 84.3,
+          "H": 281.1,
+          "side": 310.7,
+          "Dc": 44.3,
+          "Di": 79.3
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 80.3,
+          "H": 267.7,
+          "side": 295.9,
+          "Dc": 40.3,
+          "Di": 75.3
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 105,
+          "H": 238.6,
+          "side": 290,
+          "Dc": 65,
+          "Di": 100
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 100,
+          "H": 227.3,
+          "side": 276.3,
+          "Dc": 60,
+          "Di": 95
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 77.7,
+          "H": 259.1,
+          "side": 317.3,
+          "Dc": 37.7,
+          "Di": 72.7
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 74,
+          "H": 246.8,
+          "side": 302.2,
+          "Dc": 34,
+          "Di": 69
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 92.4,
+          "H": 210.1,
+          "side": 302.6,
+          "Dc": 52.4,
+          "Di": 87.4
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 88,
+          "H": 200.1,
+          "side": 288.2,
+          "Dc": 48,
+          "Di": 83
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 70.8,
+          "H": 236,
+          "side": 324.2,
+          "Dc": 30.8,
+          "Di": 65.8
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 67.4,
+          "H": 224.7,
+          "side": 308.8,
+          "Dc": 27.4,
+          "Di": 62.4
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 20,
+        "wire": 5,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 790.1,
+          "D": 81,
+          "H": 184.1,
+          "side": 314,
+          "Dc": 41,
+          "Di": 76
+        },
+        "small": {
+          "totalC": 752.5,
+          "D": 77.1,
+          "H": 175.3,
+          "side": 299.1,
+          "Dc": 37.1,
+          "Di": 72.1
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 89.8,
+          "H": 299.4,
+          "side": 331,
+          "Dc": -10.2,
+          "Di": 79.5
+        },
+        "small": {
+          "totalC": 804,
+          "D": 85.8,
+          "H": 286,
+          "side": 316.2,
+          "Dc": -14.2,
+          "Di": 75.5
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.5,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 111.8,
+          "H": 254.2,
+          "side": 309,
+          "Dc": 11.8,
+          "Di": 101.5
+        },
+        "small": {
+          "totalC": 804,
+          "D": 106.8,
+          "H": 242.8,
+          "side": 295.2,
+          "Dc": 6.8,
+          "Di": 96.5
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 82.8,
+          "H": 276,
+          "side": 338,
+          "Dc": -17.2,
+          "Di": 72.5
+        },
+        "small": {
+          "totalC": 804,
+          "D": 79.1,
+          "H": 263.7,
+          "side": 322.9,
+          "Dc": -20.9,
+          "Di": 68.8
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 0.75,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 98.5,
+          "H": 223.8,
+          "side": 322.3,
+          "Dc": -1.5,
+          "Di": 88.2
+        },
+        "small": {
+          "totalC": 804,
+          "D": 94.1,
+          "H": 213.8,
+          "side": 307.9,
+          "Dc": -5.9,
+          "Di": 83.8
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.3
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 75.4,
+          "H": 251.3,
+          "side": 345.4,
+          "Dc": -24.6,
+          "Di": 65.1
+        },
+        "small": {
+          "totalC": 804,
+          "D": 72,
+          "H": 240.1,
+          "side": 330,
+          "Dc": -28,
+          "Di": 61.7
+        }
+      }
+    },
+    {
+      "input": {
+        "freq": 435.5,
+        "turns": 1,
+        "bendRadius": 50,
+        "wire": 10.3,
+        "ratio": 0.44
+      },
+      "output": {
+        "wavelength": 688.4,
+        "big": {
+          "totalC": 841.6,
+          "D": 86.3,
+          "H": 196.1,
+          "side": 334.5,
+          "Dc": -13.7,
+          "Di": 76
+        },
+        "small": {
+          "totalC": 804,
+          "D": 82.4,
+          "H": 187.3,
+          "side": 319.6,
+          "Dc": -17.6,
+          "Di": 72.1
+        }
+      }
+    }
+  ]
+}

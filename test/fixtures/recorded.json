@@ -1,0 +1,113 @@
+{
+  "date": "2026-11-08",
+  "units": "mm, MHz",
+  "source": "values published on pages / repos (human-recorded jcoppens outputs)",
+  "notes": "tolerance ~0.1 mm (display rounding/truncation)",
+  "cases": [
+    {
+      "from": "rfwireless-world worked example",
+      "url": "https://www.rfwireless-world.com/calculators/qfh-antenna-basics",
+      "input": {
+        "freq": 137.5,
+        "turns": 0.5,
+        "bendRadius": 15,
+        "wire": 7,
+        "ratio": 0.44
+      },
+      "c": 300000,
+      "output": {
+        "wavelength": 2181.8,
+        "wavelengthC": 2336.7,
+        "bendCorr": 6.4,
+        "big": {
+          "total": 2397.4,
+          "side": 889.6,
+          "totalC": 2423.2,
+          "sideC": 859.6,
+          "H": 731.8,
+          "Di": 315,
+          "D": 322,
+          "Dc": 292
+        },
+        "small": {
+          "total": 2278.3,
+          "side": 845.8,
+          "totalC": 2304,
+          "sideC": 815.8,
+          "H": 695.8,
+          "Di": 299.1,
+          "D": 306.1,
+          "Dc": 276.1
+        }
+      }
+    },
+    {
+      "from": "kaklik/QFH-Antenna parameters.scad (433 band, designed 443.4)",
+      "url": "https://github.com/kaklik/QFH-Antenna",
+      "input": {
+        "freq": 443.4,
+        "turns": 0.5,
+        "bendRadius": 2,
+        "wire": 0.6,
+        "ratio": 0.84
+      },
+      "c": 300000,
+      "output": {
+        "big": {
+          "D": 123.2,
+          "H": 146.6
+        },
+        "small": {
+          "D": 117.1,
+          "H": 139.4
+        }
+      }
+    },
+    {
+      "from": "kaklik/QFH-Antenna parameters.scad (868, designed 913)",
+      "url": "https://github.com/kaklik/QFH-Antenna",
+      "input": {
+        "freq": 913,
+        "turns": 0.5,
+        "bendRadius": 1.5,
+        "wire": 0.6,
+        "ratio": 0.44
+      },
+      "c": 300000,
+      "output": {
+        "big": {
+          "D": 47.4,
+          "H": 107.9
+        },
+        "small": {
+          "D": 45.1,
+          "H": 102.6
+        }
+      },
+      "tolerance": 0.005,
+      "note": "recorded values ~0.3% off from jcoppens at 913 MHz (likely different input freq); relative tolerance"
+    },
+    {
+      "from": "kaklik/QFH-Antenna parameters.scad (868 robust, designed 907.8)",
+      "url": "https://github.com/kaklik/QFH-Antenna",
+      "input": {
+        "freq": 907.8,
+        "turns": 0.5,
+        "bendRadius": 1.5,
+        "wire": 0.6,
+        "ratio": 0.85
+      },
+      "c": 300000,
+      "output": {
+        "big": {
+          "D": 60.5,
+          "H": 71.1
+        },
+        "small": {
+          "D": 57.5,
+          "H": 67.6
+        }
+      }
+    }
+  ]
+}
