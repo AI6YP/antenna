@@ -203,6 +203,8 @@ Status (v0, done):
   - upstream note (tmolteno/necpp): c_geometry.cpp:199 prints int64_t with %5d → garbage wire table
     columns on wasm32 (cosmetic); misc.cpp / nec2cpp.cpp guards could use `|| defined(__wasi__)`
 - [x] GitHub Pages: https://ai6yp.github.io/antenna/ (master /docs)
+- [x] toolbar top-right: theme [Day | Night | Auto] (html[data-theme], localStorage), language [EN | RU]
+      (web/i18n.js dictionary, ?lang=ru|en, localStorage, navigator.language default); all content EN + RU
 - [ ] drill template SVG, cut list, USA/BY size sets, build pages en/ru
 
 - calculator: lib/browser.js (CommonJS, no node modules) bundled by esbuild into docs/assets/app.js

@@ -16,6 +16,7 @@ export const createNec = module => ({
       dir
     ];
     const wasi = new WASI(['nec2++', '-i/w/in.nec', '-o/w/out.out'], [], fds, {debug: false});
+    // eslint-disable-next-line camelcase
     const inst = await WebAssembly.instantiate(module, {wasi_snapshot_preview1: wasi.wasiImport});
     const rc = wasi.start(inst);
     const out = dir.dir.contents.get('out.out');

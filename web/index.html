@@ -4,23 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>QFH antennas for HAM LEO satellites — AI6YP</title>
+  <script>
+    // apply saved theme / language before first paint
+    try {
+      var th = localStorage.getItem('theme');
+      if (th === 'light' || th === 'dark') { document.documentElement.setAttribute('data-theme', th); }
+      var q = new URLSearchParams(location.search).get('lang');
+      var l = q || localStorage.getItem('lang') || ((navigator.language || '').toLowerCase().indexOf('ru') === 0 ? 'ru' : 'en');
+      document.documentElement.lang = l === 'ru' ? 'ru' : 'en';
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="toolbar"></div>
   <header>
-    <h1>QFH antennas for HAM LEO satellites</h1>
-    <p>Two quadrifilar helix antennas (2&nbsp;m and 70&nbsp;cm), RHCP, full-duplex V/u and U/v, &lt;&nbsp;50&nbsp;W.
-      Calculator, 3D model and NEC2 simulation. <a href="https://github.com/AI6YP/antenna">source</a></p>
+    <h1 data-i18n="h1">QFH antennas for HAM LEO satellites</h1>
+    <p><span data-i18n="intro"></span> <a href="https://github.com/AI6YP/antenna" data-i18n="source">source</a></p>
   </header>
 
   <main>
     <section id="status">
-      <h2>Status</h2>
+      <h2 data-i18n="h.status">Status</h2>
       <div id="status-list"></div>
     </section>
 
     <section id="calc">
-      <h2>Calculator</h2>
+      <h2 data-i18n="h.calc">Calculator</h2>
       <form id="inputs"></form>
       <div class="cols">
         <div id="dims"></div>
@@ -29,20 +39,20 @@
     </section>
 
     <section id="sim">
-      <h2>NEC2 simulation</h2>
+      <h2 data-i18n="h.sim">NEC2 simulation</h2>
       <p class="note" id="sim-note"></p>
       <p class="note" id="sim-status"></p>
       <div id="sim-controls"></div>
       <div class="grid">
-        <figure><figcaption>SWR (50&nbsp;Ω, no match)</figcaption><div id="plot-swr"></div></figure>
-        <figure><figcaption>Feed impedance, Ω</figcaption><div id="plot-z"></div></figure>
-        <figure><figcaption>Gain vs elevation, dBic (φ = 0°)</figcaption><div id="plot-gain"></div></figure>
-        <figure><figcaption>Axial ratio vs elevation, dB</figcaption><div id="plot-ar"></div></figure>
+        <figure><figcaption data-i18n="p.swr"></figcaption><div id="plot-swr"></div></figure>
+        <figure><figcaption data-i18n="p.z"></figcaption><div id="plot-z"></div></figure>
+        <figure><figcaption data-i18n="p.gain"></figcaption><div id="plot-gain"></div></figure>
+        <figure><figcaption data-i18n="p.ar"></figcaption><div id="plot-ar"></div></figure>
       </div>
     </section>
 
     <section id="sats">
-      <h2>Satellites</h2>
+      <h2 data-i18n="h.sats">Satellites</h2>
       <div id="sat-table"></div>
     </section>
   </main>

@@ -11,7 +11,6 @@ export const createView = el => {
   el.appendChild(renderer.domElement);
   const legend = document.createElement('div');
   legend.className = 'legend';
-  legend.innerHTML = '<span style="color:#e8590c">■ big loop</span> <span style="color:#1c7ed6">■ small loop</span> ■ PVC · drag to rotate';
   el.appendChild(legend);
 
   const scene = new THREE.Scene();
@@ -106,5 +105,6 @@ export const createView = el => {
   };
   resize();
   loop();
-  return {update};
+  const setLegend = html => { legend.innerHTML = html; };
+  return {update, setLegend};
 };
