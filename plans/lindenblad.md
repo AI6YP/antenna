@@ -134,7 +134,8 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
 
 ## NEC model
 
-- driven: 1 wire, odd segs, EX at center (gap + stray C later: 2 wires + LD/NT)
+- driven: sleeve wire + 1-seg feed wire (gap filled) + top wire; stray C in post-processing
+- coax: wire from sleeve mouth to mast top through PVC, sleeve choke = parallel RLC (LD 1)
 - parasitic: N wires, center at (r, φ_k = 2πk/N), tangent direction tilted ±30° (sign = polarization)
 - mast: metal wire below PVC section, floating; coax on mast = mast wire
 - free space → GN 2 poor ground; sweep f0 ± 5 %, 41 steps; RP elev 0–90 + azimuth cut (ripple vs N)
@@ -163,8 +164,24 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
          RHCP +2.4 dBic @ 0°, 0 dBic @ 30°, −3 @ 46°, zenith null
    - [x] Z(435.5) = 41.6 + j25.3 Ω (lengthened, inductive); + 4 pF stray C ‖ → ≈ 57 Ω (SWR ~1.14)
          → confirms AA2TX L-match; SWR-min 424.6 MHz @ 36.8 Ω (paper: ~32 Ω at resonance)
-   - [ ] azimuth ripple needs more φ cuts (current 0/90/180/270 symmetric for N = 4)
-   - [ ] gap + stray C model (LD / NT), ground (poor) runs, mast/PVC sweep
+   - [x] azimuth rings: 2nd RP per pattern freq, elev 0/10/20/30 × 360° @ 3° (necout parses all RP
+         tables per freq block; sim patterns[].azimuth; stats ripple). N = 4: ripple ≤ 0.06 dB
+   - [x] feed gap: filled in NEC (1-seg feed wire); stray C (feed.strayC pF, default 4) applied in
+         post-processing: z = zAnt ‖ C (sim.summarize, deck.shuntC); zAnt kept
+   - [x] sleeve choke model (lib/choke.js): shorted coax stub tube-ID / coax shield, jacket as layered
+         dielectric → Z0, vf, λ/4 f0 → parallel RLC (Q param, default 100) = LD 1 on top segment of
+         coax wire (sleeve mouth → mast top through PVC). feed.choke: sleeve (default) | ideal | none
+   - [x] param sweep tool: lib/sweep.js + `antenna <in.json> --sweep path=a:b:step [--sweep ...] [--json]`
+   - [x] results 70cm AA2TX dims (poor ground, metal 1000 mm):
+     - N: 3 → AR 8.8 dB, 5 → AR 3.6 dB at same lengths (need own retune); 4 best (AR 1.4)
+     - ideal choke: PVC ≥ 100 mm (0.15 λ) → Z independent of mast; PVC 0 (touching) → detuned
+     - pattern vs PVC length: only height-above-ground lobing; metal 0 vs 1000 mm identical
+     - choke none: SWR 3.3–7.4, AR breaks → choke essential
+     - sleeve choke (154 mm, f0 452 MHz, |X| 1.5 kΩ @ 435.5): Zant 35 + j0, SWR 1.8 (vs ideal 1.14)
+     - sleeve 158 mm (≈ λ/4 stub 160 mm): SWR 1.11 @ 435.5, band max 1.43 (Q 200) → sleeve length =
+       main tuning knob (AF6SA: trim sleeve only); note: top half shrinks as sleeve grows (fixed overall)
+     - over poor ground at 1.5 m: AR 0–30° rises to 4–10 dB at some elevations (V/H reflection differ)
+   - 2m draft with sleeve choke (465 mm, f0 151.7 MHz): SWR 2.24 → retune in phase 4
 4. 2m scaled design + retune (manual sliders)
    - draft examples/lindenblad-2m.json = AA2TX × 2.991, driven Ø25, parasitic Ø10, PVC 1000:
      free space Z(145.6) = 34.2 + j9.5, SWR-min 144.9 MHz 1.53; pattern/AR same as 70cm → retune

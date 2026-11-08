@@ -1,9 +1,10 @@
 'use strict';
 
 const {expect} = require('chai');
-const {lindenblad, lindenbladNec} = require('../lib/index.js');
+const {lindenblad, lindenbladNec, necout, sim: simLib} = require('../lib/index.js');
 
-const base = {...require('../examples/lindenblad-70cm.json'), env: {ground: 'free'}};
+// AA2TX used ferrite choke ~ ideal; sleeve choke tested separately
+const base = {...require('../examples/lindenblad-70cm.json'), env: {ground: 'free'}, feed: {choke: 'ideal'}};
 delete base.type;
 
 const at = (pat, theta, phi = 0) => pat.points.find(p => p.theta === theta && p.phi === phi);
@@ -22,6 +23,21 @@ describe('lindenblad-nec', () => {
     const zBot = Math.min(...d.wires.filter(x => !x.mast).flatMap(x => [x.a[2], x.b[2]]));
     expect(zBot).to.be.closeTo(d.zRoof + 1500, 1e-9);
     expect(d.text).to.match(/^EN$/m);
+  });
+
+  it('sleeve choke: coax wire sleeve mouth -> mast top, parallel RLC on top segment', () => {
+    const res = lindenblad.calc({...base, feed: {choke: 'sleeve'}});
+    const d = lindenbladNec.deck(res);
+    const c = d.wires.find(w => w.part === 'coax');
+    expect(c.a[2] - c.b[2]).to.be.closeTo(500, 1e-9); // pvc section
+    expect(d.text).to.match(/^LD 1 \d+ 1 1 [\d.e+]+ [\d.e-]+ [\d.e-]+$/m);
+    expect(lindenbladNec.deck(lindenblad.calc({...base, feed: {choke: 'none'}})).text).to.not.match(/^LD/m);
+    expect(lindenbladNec.deck(lindenblad.calc({...base, feed: {choke: 'none'}})).wires.some(w => w.part === 'coax')).to.equal(true);
+  });
+
+  it('azimuth rings: RP for elev 0..30, 3 deg', () => {
+    const d = lindenbladNec.deck(lindenblad.calc(base));
+    expect(d.text).to.match(/^RP 0 4 120 1000 60 0 10 3$/m);
   });
 
   it('no mast when mast.metal = 0', () => {
@@ -45,17 +61,36 @@ describe('lindenblad-nec', () => {
     });
   }
 
-  it('AA2TX 70cm: driven inductive at f0, R 30-50 ohm; resonance below band (lengthened)', function () {
+  it('AA2TX 70cm: zAnt inductive at f0 (lengthened); + 4 pF stray C -> ~50 ohm', function () {
     this.timeout(60000);
-    const sim = lindenbladNec.simulate(lindenblad.calc(base));
-    const z = sim.sweep.reduce((m, s) => Math.abs(s.freq - 435.5) < Math.abs(m.freq - 435.5) ? s : m).z;
-    expect(z.re).to.be.within(30, 50);
-    expect(z.im).to.be.above(10);
-    // with ~4 pF feed stray C in parallel -> near 50 ohm (AA2TX L-match)
-    const w = 2 * Math.PI * 435.5e6;
-    const y = {re: z.re / (z.re ** 2 + z.im ** 2), im: -z.im / (z.re ** 2 + z.im ** 2) + w * 4e-12};
-    const zr = y.re / (y.re ** 2 + y.im ** 2), zi = -y.im / (y.re ** 2 + y.im ** 2);
-    expect(zr).to.be.within(40, 65);
-    expect(Math.abs(zi)).to.be.below(10);
+    const res = lindenblad.calc(base);
+    const sim = lindenbladNec.simulate(res);
+    const st = simLib.stats(sim, res.input);
+    expect(st.zAnt.re).to.be.within(30, 50);
+    expect(st.zAnt.im).to.be.above(10);
+    // shunt C: by hand vs summarize
+    const z = necout.shuntC(st.zAnt, 4e-12, st.freq);
+    expect(st.z.re).to.be.closeTo(z.re, 1e-9);
+    expect(st.z.re).to.be.within(40, 65);
+    expect(Math.abs(st.z.im)).to.be.below(10);
+    expect(st.swrBandMax).to.be.below(1.5);
+    // azimuth ripple (N = 4) small
+    expect(st.elev[10].ripple).to.be.below(0.5);
+  });
+});
+
+describe('lindenblad-nec: sleeve choke (NEC)', () => {
+  it('no choke detunes badly; sleeve at lambda/4 stub length matches', function () {
+    this.timeout(60000);
+    const run = feed => {
+      const res = lindenblad.calc({...base, feed});
+      return simLib.stats(lindenbladNec.simulate(res), res.input);
+    };
+    expect(run({choke: 'none'}).swr).to.be.above(2.5);
+    const qw = lindenblad.calc(base).dims.sleeve.lengthQW;
+    const st = run({choke: 'sleeve'});
+    expect(st.swr).to.be.below(2);
+    const tuned = lindenblad.calc({...base, driven: {sleeve: Math.round(qw) - 2}, feed: {choke: 'sleeve'}});
+    expect(simLib.stats(lindenbladNec.simulate(tuned), tuned.input).swr).to.be.below(1.3);
   });
 });

@@ -57,3 +57,19 @@ describe('core', () => {
     expect(s).to.match(/^qfh .*legacy/m);
   });
 });
+
+describe('sweep', () => {
+  const {sweep} = require('../lib/index.js');
+  it('parseSpec: range, list, null', () => {
+    expect(sweep.parseSpec('a.b=0:10:5')).to.deep.equal({path: 'a.b', values: [0, 5, 10]});
+    expect(sweep.parseSpec('p=RHCP,LHCP')).to.deep.equal({path: 'p', values: ['RHCP', 'LHCP']});
+    expect(sweep.parseSpec('s=null,150')).to.deep.equal({path: 's', values: [null, 150]});
+    expect(() => sweep.parseSpec('x')).to.throw(/sweep spec/);
+  });
+  it('grid: cartesian, deep merge', () => {
+    const g = sweep.grid({a: {b: 1, c: 2}}, [sweep.parseSpec('a.b=1,2'), sweep.parseSpec('d=x,y')]);
+    expect(g).to.have.length(4);
+    expect(g[3].input).to.deep.equal({a: {b: 2, c: 2}, d: 'y'});
+    expect(g[3].label).to.deep.equal({'a.b': 2, d: 'y'});
+  });
+});
