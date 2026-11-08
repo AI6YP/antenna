@@ -1,12 +1,16 @@
 # antenna
 collection of antennas
 
-QFH antennas for HAM LEO satellites (2 m / 70 cm): https://ai6yp.github.io/antenna/
+Lindenblad (new default) and QFH (legacy) antennas for HAM LEO satellites (2 m / 70 cm): https://ai6yp.github.io/antenna/
+
+Plans: [plans/lindenblad.md](plans/lindenblad.md), [plans/qfh.md](plans/qfh.md)
 
 ```
 npm install
 npm test
-./bin/qfh.js examples/qfh-70cm.json
+./bin/antenna.js --list
+./bin/antenna.js examples/qfh-70cm.json --type qfh [--nec | --sim]
+./bin/qfh.js examples/qfh-70cm.json     # legacy alias
 nec2++ -iexamples/example1.nec
 ```
 

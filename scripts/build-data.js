@@ -2,41 +2,40 @@
 'use strict';
 
 // Precompute NEC results for reference designs -> web/data/*.json (needs nec2++)
+// designs: examples/<name>.json; antenna type from "type" field or name prefix (qfh-*, lindenblad-*)
 
 const fs = require('node:fs');
 const path = require('node:path');
-const {qfh, qfhNec} = require('../lib/index.js');
+const {antennas, sim: simLib} = require('../lib/index.js');
 
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'web/data');
 fs.mkdirSync(out, {recursive: true});
 
-const designs = ['qfh-2m', 'qfh-70cm'];
+const designs = fs.readdirSync(path.join(root, 'examples'))
+  .filter(f => f.endsWith('.json'))
+  .map(f => f.slice(0, -5))
+  .filter(name => antennas.antennas[name.split('-')[0]])
+  .sort();
 const grounds = ['free', 'poor'];
 
 const index = [];
 for (const name of designs) {
   const base = JSON.parse(fs.readFileSync(path.join(root, 'examples', name + '.json'), 'utf8'));
+  const {antenna, input: base1} = antennas.resolve(base, base.type || name.split('-')[0]);
   for (const ground of grounds) {
-    const input = {...base, env: {...base.env, ground}};
-    const res = qfh.calc(input);
+    const input = {...base1, env: {...base1.env, ground}};
+    const res = antenna.calc(input);
     const t0 = Date.now();
-    const sim = qfhNec.simulate(res);
+    const sim = antenna.simulate(res);
     const file = name + '-' + ground + '.json';
-    const round = x => +x.toFixed(4);
     fs.writeFileSync(path.join(out, file), JSON.stringify({
-      name, ground,
+      name, type: antenna.type, ground,
       date: new Date().toISOString(),
       input: res.input,
-      segments: sim.deck.segments,
-      warnings: sim.warnings,
-      sweep: sim.sweep.map(s => ({freq: round(s.freq), r: round(s.z.re), x: round(s.z.im), swr: round(s.swr)})),
-      patterns: sim.patterns.map(p => ({
-        freq: p.freq,
-        points: p.points.map(q => ({theta: q.theta, phi: q.phi, rhcp: round(q.rhcp), lhcp: round(q.lhcp), arDb: round(q.arDb)}))
-      }))
+      ...simLib.compact(sim)
     }) + '\n');
-    index.push({name, ground, file});
+    index.push({name, type: antenna.type, ground, file});
     console.log(file, sim.deck.segments, 'segments', Date.now() - t0, 'ms');
   }
 }

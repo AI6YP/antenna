@@ -1,9 +1,10 @@
 {
   "name": "antenna",
   "version": "0.1.0",
-  "description": "Antenna calculators and NEC2 models (QFH for HAM LEO sats)",
+  "description": "Antenna calculators and NEC2 models (Lindenblad, QFH) for HAM LEO sats",
   "main": "lib/index.js",
   "bin": {
+    "antenna": "bin/antenna.js",
     "qfh": "bin/qfh.js"
   },
   "files": [
