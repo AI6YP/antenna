@@ -4,7 +4,7 @@ export const phases = [
   {state: 'done', title: 'NEC2 model + nec2++ runner + parser', note: 'RHCP twist / feed polarity verified'},
   {state: 'wip', title: 'Web page: calculator + three.js + Observable Plot', note: 'this page'},
   {state: 'todo', title: 'Antenna optimizer (scale, loop factors, turns, D/H)', note: 'resonance ~2.5 % low today'},
-  {state: 'todo', title: 'nec2++ → WASM (clang / wasi-sdk), live simulation in browser'},
+  {state: 'done', title: 'nec2++ → WASM (clang / wasi-sdk), live simulation in browser', note: 'bit-identical to native'},
   {state: 'todo', title: 'Feed / balun variants (infinite balun)'},
   {state: 'todo', title: 'Frame + drilling template, USA / BY size sets'},
   {state: 'todo', title: 'Match box: match + LPF (2 m) / HPF (70 cm), ngspice check'},

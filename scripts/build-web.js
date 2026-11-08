@@ -19,11 +19,12 @@ const copy = () => {
     fs.copyFileSync(path.join(src, f), path.join(dst, f));
   }
   fs.cpSync(path.join(src, 'data'), path.join(dst, 'data'), {recursive: true});
+  fs.cpSync(path.join(src, 'wasm'), path.join(dst, 'wasm'), {recursive: true});
   fs.writeFileSync(path.join(dst, '.nojekyll'), ''); // GitHub Pages: serve as-is
 };
 
 const opts = {
-  entryPoints: [path.join(src, 'main.js')],
+  entryPoints: {app: path.join(src, 'main.js'), 'nec-worker': path.join(src, 'nec-worker.js')},
   bundle: true,
   format: 'esm',
   platform: 'browser',
@@ -31,7 +32,7 @@ const opts = {
   external: ['node:*'],
   minify: !watch,
   sourcemap: watch,
-  outfile: path.join(dst, 'assets/app.js'),
+  outdir: path.join(dst, 'assets'),
   logLevel: 'info'
 };
 

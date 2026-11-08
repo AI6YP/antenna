@@ -10,6 +10,15 @@ npm test
 nec2++ -iexamples/example1.nec
 ```
 
+Web page (`web/` → `docs/`):
+
+```
+npm run build:data     # precompute nec2++ results (native)
+scripts/build-wasm.sh  # nec2++ -> web/wasm/nec2pp.wasm (needs /opt/wasi-sdk >= 33)
+npm run build:web      # esbuild -> docs/
+npm run dev            # watch + serve http://localhost:8000
+```
+
 `lib/necpp.js` looks for nec2++ in: `$NEC2PP`, `../../tmolteno/necpp/build/src/nec2++` (local clone), `$PATH`.
 https://github.com/tmolteno/necpp
 

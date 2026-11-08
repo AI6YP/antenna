@@ -197,7 +197,12 @@ Status (v0, done):
 - [x] web/index.html, style.css, main.js (calculator form + dims table), view3d.js (three.js), plots.js (Plot), status.js, sats.js
 - [x] scripts/build-data.js: precomputed nec2++ results → web/data/*.json (2m / 70cm × free / poor ground)
 - [x] scripts/build-web.js: esbuild bundle (three + Plot + lib/browser.js) → docs/; `npm run dev` = watch + serve :8000
-- [ ] WASM nec2++ (clang 23 + /opt/wasi-sdk) → live sim; runner injected via qfhNec.simulate({run})
+- [x] WASM nec2++: scripts/build-wasm.sh (wasi-sdk 33 clang, wasm32-wasip1, -fwasm-exceptions exnref,
+      8 MB stack) → web/wasm/nec2pp.wasm (686 KB); runs full nec2++ CLI via @bjorn3/browser_wasi_shim
+      in a Web Worker; results bit-identical to native (test/nec-wasm.js); 70cm 0.34 s, 2m 0.81 s in Chromium
+  - upstream note (tmolteno/necpp): c_geometry.cpp:199 prints int64_t with %5d → garbage wire table
+    columns on wasm32 (cosmetic); misc.cpp / nec2cpp.cpp guards could use `|| defined(__wasi__)`
+- [x] GitHub Pages: https://ai6yp.github.io/antenna/ (master /docs)
 - [ ] drill template SVG, cut list, USA/BY size sets, build pages en/ru
 
 - calculator: lib/browser.js (CommonJS, no node modules) bundled by esbuild into docs/assets/app.js

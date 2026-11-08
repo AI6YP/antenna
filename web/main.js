@@ -4,7 +4,7 @@ import * as plots from './plots.js';
 import * as status from './status.js';
 import * as sats from './sats.js';
 
-const {qfh, cables} = lib;
+const {qfh, qfhNec, cables} = lib;
 
 const presets = {
   '2m': {freq: 145.6, band: [144.3, 146.0], conductor: {type: 'coax', name: 'RG-213', od: 10.3}, bendRadius: 60, data: 'qfh-2m'},
@@ -74,6 +74,7 @@ const recalc = () => {
     const res = qfh.calc(toInput());
     renderDims(res);
     view.update(res);
+    scheduleSim();
   } catch (err) {
     document.getElementById('dims').innerHTML = '<p class="note">⚠ ' + err.message + '</p>';
   }
@@ -86,7 +87,6 @@ form.addEventListener('input', e => {
     const pre = presets[state.band];
     Object.assign(state, {freq: pre.freq, cable: pre.conductor.name, bendRadius: pre.bendRadius});
     renderForm();
-    loadSim();
   }
   recalc();
 });
@@ -96,26 +96,83 @@ const sim = {ground: 'free'};
 const simControls = document.getElementById('sim-controls');
 simControls.innerHTML = '<label><input type="radio" name="ground" value="free" checked> free space</label>' +
   '<label><input type="radio" name="ground" value="poor"> poor ground, 4 m roof + 1.5 m mast</label>';
-simControls.addEventListener('change', e => { sim.ground = e.target.value; loadSim(); });
+simControls.addEventListener('change', e => {
+  sim.ground = e.target.value;
+  if (liveOk) { scheduleSim(); } else { loadSim(); }
+});
 
 const put = (id, node) => { const el = document.getElementById(id); el.replaceChildren(node); };
 
-const loadSim = async () => {
-  const name = presets[state.band].data + '-' + sim.ground;
-  const data = await (await fetch('data/' + name + '.json')).json();
-  const i = data.input;
-  document.getElementById('sim-note').textContent =
-    'Precomputed with nec2++ for the reference design: ' + i.freq + ' MHz, ' + i.conductor.name + ', ' + i.turns +
-    ' turn, D/H ' + i.ratioDH + ', bend R ' + i.bendRadius + ' mm (' + data.segments + ' segments). ' +
-    'Live simulation in the browser (nec2++ → WASM) is planned. Unoptimized Coppens dimensions: resonance is ~2.5 % low.';
+const showSim = (data, note) => {
+  document.getElementById('sim-note').textContent = note;
   put('plot-swr', plots.swr(data));
   put('plot-z', plots.z(data));
   put('plot-gain', plots.gain(data));
   put('plot-ar', plots.ar(data));
 };
 
+// fallback: precomputed results for reference design
+const loadSim = async () => {
+  const name = presets[state.band].data + '-' + sim.ground;
+  const data = await (await fetch('data/' + name + '.json')).json();
+  const i = data.input;
+  showSim(data, 'Precomputed with nec2++ for the reference design: ' + i.freq + ' MHz, ' + i.conductor.name + ', ' +
+    i.turns + ' turn, D/H ' + i.ratioDH + ', bend R ' + i.bendRadius + ' mm (' + data.segments + ' segments).');
+};
+
+// live: nec2++ WASM in a Web Worker
+const worker = new Worker(new URL('assets/nec-worker.js', document.baseURI), {type: 'module'});
+const wasmUrl = new URL('wasm/nec2pp.wasm', document.baseURI).href;
+const pending = new Map();
+let nextId = 1;
+worker.onmessage = e => {
+  const {id} = e.data;
+  const cb = pending.get(id);
+  pending.delete(id);
+  if (cb) { cb(e.data); }
+};
+const necRun = deck => new Promise((resolve, reject) => {
+  const id = nextId++;
+  pending.set(id, d => (d.error ? reject(new Error(d.error)) : resolve(d)));
+  worker.postMessage({id, deck, wasmUrl});
+});
+
+const statusEl = document.getElementById('sim-status');
+let simTimer = null, simSeq = 0, liveOk = true;
+
+const runLive = async () => {
+  const seq = ++simSeq;
+  const input = {...toInput(), env: {ground: sim.ground}};
+  const res = qfh.calc(input);
+  const deck = qfhNec.deck(res);
+  statusEl.textContent = '⏳ nec2++ (WASM) running, ' + deck.segments + ' segments…';
+  try {
+    const {out, ms} = await necRun(deck.text);
+    if (seq !== simSeq) { return; } // superseded
+    const s = qfhNec.summarize(out, deck);
+    const data = {
+      input: res.input,
+      sweep: s.sweep.map(x => ({freq: x.freq, r: x.z.re, x: x.z.im, swr: x.swr})),
+      patterns: s.patterns
+    };
+    showSim(data, 'Live nec2++ (WebAssembly) for the inputs above: ' + input.freq + ' MHz, ' + input.conductor.name +
+      ', ' + input.turns + ' turn, D/H ' + input.ratioDH + ', bend R ' + input.bendRadius + ' mm. ' +
+      'Unoptimized Coppens dimensions: resonance is ~2.5 % low.');
+    statusEl.textContent = '✓ ' + deck.segments + ' segments, ' + (ms / 1000).toFixed(2) + ' s in your browser';
+  } catch (err) {
+    liveOk = false;
+    statusEl.textContent = '⚠ WASM simulation unavailable (' + err.message + '); showing precomputed results.';
+    loadSim();
+  }
+};
+
+function scheduleSim () {
+  if (!liveOk) { return; }
+  clearTimeout(simTimer);
+  simTimer = setTimeout(runLive, 300);
+}
+
 status.render(document.getElementById('status-list'));
 sats.render(document.getElementById('sat-table'));
 renderForm();
 recalc();
-loadSim();
