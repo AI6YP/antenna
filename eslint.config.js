@@ -3,7 +3,7 @@
 module.exports = [
   require('@drom/eslint-config/eslint9/node22'),
   {
-    files: ['web/**/*.js'],
+    files: ['web/**/*.js', 'web/**/*.mjs'],
     languageOptions: {sourceType: 'module'}
   },
   {

@@ -29,6 +29,7 @@
     "node": ">=26"
   },
   "devDependencies": {
+    "@bjorn3/browser_wasi_shim": "^0.4.2",
     "@drom/eslint-config": "^1.0.0",
     "@observablehq/plot": "^0.6.19",
     "chai": "^6.3.0",
