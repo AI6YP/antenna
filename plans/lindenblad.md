@@ -153,8 +153,21 @@ N (default 4; 3 / 5 for comparison), parasitic z-offset, ODs (1 mm step), PVC se
    - [x] QFH decks + CLI JSON + web/data byte-identical to pre-refactor; test/core.js
    - [ ] web: antenna selector + params schema sliders (→ phase 5)
 2. Lindenblad parasitic calculator + geometry + tests (AA2TX fixture)
+   - [x] lib/lindenblad.js: defaults = AA2TX 70cm (mm), normalize/validate, dimensions, geometry,
+         params schema (sliders); tilt sign: RHCP = left end up looking toward hub (s = -1)
+   - [x] registered in lib/antennas.js → default type; examples/lindenblad-{70cm,2m}.json
 3. NEC deck + verify vs AA2TX (70cm: Z ≈ 32 Ω at resonance, ~50 Ω lengthened, RHCP sense, pattern)
+   - [x] lib/lindenblad-nec.js: sleeve wire + 1-seg feed wire (gap filled) + top wire, N parasitic,
+         mast wire (antenna bottom = metal + pvc above roof), ideal sleeve choke
+   - [x] tilt sign verified (free space, 435.5): RHCP − LHCP ≈ 22 dB at 0–20°, AR ≤ 1.4 dB 0–30°,
+         RHCP +2.4 dBic @ 0°, 0 dBic @ 30°, −3 @ 46°, zenith null
+   - [x] Z(435.5) = 41.6 + j25.3 Ω (lengthened, inductive); + 4 pF stray C ‖ → ≈ 57 Ω (SWR ~1.14)
+         → confirms AA2TX L-match; SWR-min 424.6 MHz @ 36.8 Ω (paper: ~32 Ω at resonance)
+   - [ ] azimuth ripple needs more φ cuts (current 0/90/180/270 symmetric for N = 4)
+   - [ ] gap + stray C model (LD / NT), ground (poor) runs, mast/PVC sweep
 4. 2m scaled design + retune (manual sliders)
+   - draft examples/lindenblad-2m.json = AA2TX × 2.991, driven Ø25, parasitic Ø10, PVC 1000:
+     free space Z(145.6) = 34.2 + j9.5, SWR-min 144.9 MHz 1.53; pattern/AR same as 70cm → retune
 5. Web: selector + param sliders + 3D (driven, parasitic, hub, arms, mast) + plots
 6. 3D parts: Replicad models (hub, adjustable parasitic adapter, mast adapters, spacers) → STL/STEP
 7. Post-MVP: optimizer (lengths, radius, tilt, N → AR < 3 dB 5–45°, max RHCP 5–30°, SWR)

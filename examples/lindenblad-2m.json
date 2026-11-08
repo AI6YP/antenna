@@ -1,0 +1,28 @@
+{
+  "type": "lindenblad",
+  "freq": 145.6,
+  "band": [
+    144.3,
+    146
+  ],
+  "driven": {
+    "length": 940,
+    "od": 25,
+    "gap": 10
+  },
+  "parasitic": {
+    "n": 4,
+    "length": 893,
+    "od": 10,
+    "radius": 309,
+    "tilt": 30
+  },
+  "env": {
+    "ground": "poor",
+    "mast": {
+      "metal": 1000,
+      "pvc": 1000,
+      "od": 40
+    }
+  }
+}
