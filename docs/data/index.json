@@ -1,0 +1,22 @@
+[
+  {
+    "name": "qfh-2m",
+    "ground": "free",
+    "file": "qfh-2m-free.json"
+  },
+  {
+    "name": "qfh-2m",
+    "ground": "poor",
+    "file": "qfh-2m-poor.json"
+  },
+  {
+    "name": "qfh-70cm",
+    "ground": "free",
+    "file": "qfh-70cm-free.json"
+  },
+  {
+    "name": "qfh-70cm",
+    "ground": "poor",
+    "file": "qfh-70cm-poor.json"
+  }
+]

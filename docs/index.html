@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QFH antennas for HAM LEO satellites — AI6YP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>QFH antennas for HAM LEO satellites</h1>
+    <p>Two quadrifilar helix antennas (2&nbsp;m and 70&nbsp;cm), RHCP, full-duplex V/u and U/v, &lt;&nbsp;50&nbsp;W.
+      Calculator, 3D model and NEC2 simulation. <a href="https://github.com/AI6YP/antenna">source</a></p>
+  </header>
+
+  <main>
+    <section id="status">
+      <h2>Status</h2>
+      <div id="status-list"></div>
+    </section>
+
+    <section id="calc">
+      <h2>Calculator</h2>
+      <form id="inputs"></form>
+      <div class="cols">
+        <div id="dims"></div>
+        <div id="view3d"></div>
+      </div>
+    </section>
+
+    <section id="sim">
+      <h2>NEC2 simulation</h2>
+      <p class="note" id="sim-note"></p>
+      <div id="sim-controls"></div>
+      <div class="grid">
+        <figure><figcaption>SWR (50&nbsp;Ω, no match)</figcaption><div id="plot-swr"></div></figure>
+        <figure><figcaption>Feed impedance, Ω</figcaption><div id="plot-z"></div></figure>
+        <figure><figcaption>Gain vs elevation, dBic (φ = 0°)</figcaption><div id="plot-gain"></div></figure>
+        <figure><figcaption>Axial ratio vs elevation, dB</figcaption><div id="plot-ar"></div></figure>
+      </div>
+    </section>
+
+    <section id="sats">
+      <h2>Satellites</h2>
+      <div id="sat-table"></div>
+    </section>
+  </main>
+
+  <footer>AI6YP · <a href="https://github.com/AI6YP/antenna">github.com/AI6YP/antenna</a></footer>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
